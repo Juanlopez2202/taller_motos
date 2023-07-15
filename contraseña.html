@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="controller/img/icono.png" type="image/x-icon">
+    <link rel="stylesheet" href="controller/styles/styles.css">
+    <title>Olvido de contraseña</title>
+</head>
+<body  >
+ 
+ <div class=" contenido-centrado">
+   
+    <div class=" degradado sombra ">
+
+
+    <div class="contenedor-img registo-img">
+         <img class="imagen-registro" src="controller/img/27520215_7323981.jpg" alt="imagen logo">
+    </div>
+        <form class="formulario" method="POST" autocomplete="off" action="controller/validaciones/contraseña.php">
+            <h1>recuperar contraseña</h1>
+            <p>completa la informacion</p>
+            <div class="campo">
+                <label for="documento">Documento</label>
+                <input oninput="maxlengthNumber(this);" maxlength="10" type="number" placeholder="Tu Documento" id="documento" name="documento" >
+            </div>
+            
+              
+            
+
+             <input class="boton azul registro-btn" type="submit" value="enviar" name="enviar">
+             <div class="enlaces">
+                <a href="index.html"> volver</a>
+                
+             </div>
+            
+
+        </form>
+
+        
+    </div>
+    </div>
+    <script>
+        function maxlengthNumber(obj){
+            if(obj.value.length > obj.maxLength){
+                obj.value = obj.value.slice(0, obj.maxLength);
+                alert("Debe ingresar solo el numero de digitos establecidos");
+
+            }
+        }
+    </script>
+</body>
+</html>

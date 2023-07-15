@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="controller/styles/styles.css">
+    <link rel="shortcut icon" href="controller/img/icono.png" type="image/x-icon">
+    <title>login</title>
+</head>
+<body>
+ 
+ <div class=" seccion contenedor contenido-centrado">
+   
+    <div class=" degradado sombra contenedor-principal">
+
+
+    <div class="contenedor-img">
+         <img class="imagen" src="controller/img/27520215_7323981.jpg" alt="imagen logo">
+    </div>
+    <form class="formulario"  method="post"  name="form1" action="inicio.php" autocomplete="off" >
+
+            <h1>login</h1>
+
+            <div class="campo">
+                <label for="documento">Documento</label>
+                <input  oninput="maxlengthNumber(this);" maxlength="10" name="documento" type="number" placeholder="Tu Documento" id="documento" min="1" >
+            </div>
+            <div class="campo">
+                <label for="usuario">usuario</label>
+                <input oninput="multipletetx(this);" maxlength="16" name="usuario" type="text" placeholder="Tu usuario"  id="usuario">
+            </div>
+              
+            <div class="campo">
+                <label for="telefono">Password</label>
+                <input oninput="multipletetx(this);" maxlength="12" name="clave" type="password" placeholder="Tu Password"  id="telefono">
+            </div>
+              
+             
+
+             <input name="validar" type="submit" href="controller/inicio.php" class="boton azul" value="validar" >
+             <div class="enlaces">
+                <a href="registro.php"> registrarse</a>
+                <a href="contraseña.html">olvide mi contraseña</a>
+             </div>
+            
+
+        </form>
+
+        
+    </div>
+    </div>
+    <script>
+        function maxlengthNumber(obj){
+            if(obj.value.length > obj.maxLength){
+                obj.value = obj.value.slice(0, obj.maxLength);
+                alert("Debe ingresar solo el numero de digitos establecidos");
+
+            }
+        }
+    </script>
+
+    <script>
+        function multipletext(e) {
+            key=e.keyCode || e.which;
+
+            teclado=String.fromCharCode(key).toLowerCase();
+
+            letras="qwertyuiopasdfghjklñzxcvbnm";
+
+            especiales="8-37-38-46-164-46";
+
+            teclado_especial=false;
+
+            for(var i in especiales){
+                if(key==especiales[i]){
+                    teclado_especial=true;
+                    break;
+                }
+            }
+
+            if(letras.indexOf(teclado)==-1 && !teclado_especial){
+                return false;
+                a
+            }
+        }
+    </script>
+</body>
+</html>
+
