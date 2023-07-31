@@ -59,7 +59,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Cuenta</title>
+    <title>Informacion Documentos</title>
     <!-- Bootstrap CSS -->
   
 </head>
@@ -73,7 +73,7 @@
         <?php foreach ($motosPaginadas as $moto) { ?>
             <div class="card mb-3">
                 <div class="card-header">
-                  <h2>  Información de tu moto (Placa: <?php echo $moto['placa']; ?>)</h2>
+                <h2>INFORMACIÓN DE TU MOTO (PLACA: <?php echo strtoupper($moto['placa']); ?>)</h2>
                 </div>
                 <div class="card-body">
                     <p><strong>Cliente:</strong> <?php echo $moto['nombre_cliente']; ?></p>
