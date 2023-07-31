@@ -73,7 +73,7 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="heading-<?php echo $moto['placa']; ?>">
 
-                            Información de tu moto (Placa: <?php echo $moto['placa']; ?>)
+                            Información de tu moto (Placa: <?php echo strtoupper( $moto['placa']); ?>)
                        
                     </h2>
                     <div id="collapse-<?php echo $moto['placa']; ?>" class="accordion-collapse collapse show" aria-labelledby="heading-<?php echo $moto['placa']; ?>" data-bs-parent="#accordion-<?php echo $moto['placa']; ?>">
