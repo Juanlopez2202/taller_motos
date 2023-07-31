@@ -25,7 +25,7 @@ if ((isset($_POST["agregar"]))&&($_POST["agregar"]=="formu"))
         $barcode = $_POST['barcode'];
         
 
-        $validar="SELECT * FROM productos WHERE id_productos='$id' or nom_producto='$nombre'";
+        $validar="SELECT id_productos FROM productos WHERE id_productos='$id' or nom_producto='$nombre'";
         $queryi=$conectar->prepare($validar);
         $queryi->execute();
         $fila1=$queryi->fetchAll(PDO::FETCH_ASSOC);
@@ -65,7 +65,7 @@ if ((isset($_POST["agregar"]))&&($_POST["agregar"]=="formu"))
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>productos</title>
-       <?php require_once "index.php"; ?>
+       <?php require_once "navbar.php"; ?>
        
        
 </head>

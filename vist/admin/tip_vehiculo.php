@@ -40,7 +40,7 @@ $conectar= $db->conectar();
             $insertsql=$conectar->prepare("INSERT INTO tipo_vehiculo (id_clase,tip_vehiculo) VALUES (?,?);");
             $insertsql->execute([$id,$tip_vehiculo]);
             echo '<script>alert ("Registro Exitoso, Gracias");</script>';
-            echo '<script> window.location="tip_vehicuko.php"</script>';
+            echo '<script> window.location="tip_vehiculo.php"</script>';
         }
 
     }
@@ -58,7 +58,7 @@ $conectar= $db->conectar();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tipo de vehiculo</title>
-       <?php require_once "index.php"; ?>
+       <?php require_once "navbar.php"; ?>
        
        
 </head>

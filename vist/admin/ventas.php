@@ -1,87 +1,125 @@
-
 <?php
-
-require_once("../../bd/conexion.php");
-include_once "index.php";
+require_once("navbar.php");
 
 $db = new database();
-$conectar= $db->conectar();
+$conectar = $db->conectar();
 
+// Consulta para obtener las facturas de ventas y sus detalles de productos, servicios y documentos
+$consultaFacturas = $conectar->prepare("
+    SELECT
+        fv.id_venta,
+        fv.placa,
+        fv.fecha,
+        fv.fecha_vigencia_soat,
+        fv.fecha_vigencia_tecnomecanica,
+        fv.documento,
+        fv.total,
+        p.nom_producto,
+        dv.cantidad AS cantidad_producto,
+        p.precio AS subtotal_producto,
+        s.servicio,
+        dvs.cantidad AS cantidad_servicio,
+        dvs.subtotal AS subtotal_servicio,
+        d.documentos,
+        dvdocu.subtotal AS subtotal_documento
+    FROM factura_venta fv
+    LEFT JOIN detalle_venta dv ON fv.id_venta = dv.id_venta
+    LEFT JOIN productos p ON dv.id_producto = p.id_productos
+    LEFT JOIN detalle_vservi dvs ON fv.id_venta = dvs.id_venta
+    LEFT JOIN servicio s ON dvs.id_servicio = s.id_servicios
+    LEFT JOIN detalle_vdocu dvdocu ON fv.id_venta = dvdocu.id_venta
+    LEFT JOIN documentos d ON dvdocu.id_documentos = d.id_documentos
+");
 
-$sentencia = $conectar->prepare("SELECT factura_venta.total, factura_venta.fecha, factura_venta.id_venta,usuarios.nombre_completo, GROUP_CONCAT(productos.id_productos, '..',  productos.nom_producto, '..', detalle_venta.cantidad SEPARATOR '__') AS productos  FROM factura_venta INNER JOIN detalle_venta ON detalle_venta.id_venta = factura_venta.id_venta INNER JOIN productos ON productos.id_productos = detalle_venta.id_producto INNER join usuarios on factura_venta.documento=usuarios.documento  GROUP BY factura_venta.id_venta ORDER BY factura_venta.id_venta;");
-$sentencia->execute();
-$ventas = $sentencia->fetchAll(PDO::FETCH_OBJ);
-
-
-
+$consultaFacturas->execute();
+$facturas = $consultaFacturas->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../controller/styles/iconos.css">
-    <title>Document</title>
+    <title>Facturas de Ventas</title>
+    <!-- Bootstrap CSS -->
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-    
+    <div class="container mt-5">
+        <h1 class="mb-4">Facturas de Ventas</h1>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID Venta</th>
+                        <th>Placa del Vehículo</th>
+                        <th>Fecha de Venta</th>
+                        <th>Fecha de Vigencia SOAT</th>
+                        <th>Fecha de Vigencia Tecnomecánica</th>
+                        <th>Documento</th>
+                        <th>Total</th>
+                        <th>Productos</th>
+                        <th>Servicios</th>
+                        <th>Documentos</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($facturas as $factura) { ?>
+                        <tr>
+                            <td><?php echo $factura["id_venta"]; ?></td>
+                            <td><?php echo $factura["placa"]; ?></td>
+                            <td><?php echo $factura["fecha"]; ?></td>
+                            <td><?php echo $factura["fecha_vigencia_soat"]; ?></td>
+                            <td><?php echo $factura["fecha_vigencia_tecnomecanica"]; ?></td>
+                            <td><?php echo $factura["documento"]; ?></td>
+                            <td><?php echo $factura["total"]; ?></td>
+                            <td>
+                                <?php
+                                if ($factura["cantidad_producto"] !== null) {
+                                    echo "<strong>Nombre:</strong> " . $factura["nom_producto"] . "<br><strong>Cantidad:</strong> " . $factura["cantidad_producto"] . "<br><strong>Subtotal:</strong> " . $factura["subtotal_producto"];
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                if ($factura["cantidad_servicio"] !== null) {
+                                    echo "<strong>Servicio:</strong> " . $factura["servicio"] . "<br><strong>Cantidad:</strong> " . $factura["cantidad_servicio"] . "<br><strong>Subtotal:</strong> " . $factura["subtotal_servicio"];
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                if ($factura["subtotal_documento"] !== null) {
+                                    echo "<strong>Documento:</strong> " . $factura["documentos"] . "<br><strong>Subtotal:</strong> " . $factura["subtotal_documento"];
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <a href="imprimir.php?id=<?php echo $factura['id_venta']; ?>" class="btn btn-primary">
+                                    <i class="fas fa-print me-2"></i>Imprimir
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" onclick="window.print()">
+                <i class="fas fa-print me-2"></i>Imprimir Facturas
+            </button>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
 
-	<div class="col-xs-12">
-		<h1>Ventas</h1>
-		<div>
-			<a class="btn btn-success" href="./vender.php">Nueva <i class="fa fa-plus"></i></a>
-		</div>
-		<br>
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th>Número</th>
-					<th>Fecha</th>
-					<th>vendedor</th>
-					<th>Productos vendidos</th>
-					<th>Total</th>
-					<th>Ticket</th>
-					<th>Eliminar</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach($ventas as $venta){ ?>
-				<tr>
-					<td><?php echo $venta->id_venta ?></td>
-					<td><?php echo $venta->fecha ?></td>
-					<td><?php echo $venta->nombre_completo ?></td>
-
-					<td>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>Código</th>
-									<th>Descripción</th>
-									<th>Cantidad</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php foreach(explode("__", $venta->productos) as $productosConcatenados){ 
-								$producto = explode("..", $productosConcatenados)
-								?>
-								<tr>
-									<td><?php echo $producto[0] ?></td>
-									<td><?php echo $producto[1] ?></td>
-									<td><?php echo $producto[2] ?></td>
-								</tr>
-								<?php } ?>
-							</tbody>
-						</table>
-					</td>
-					<td><?php echo $venta->total ?></td>
-                    
-					<td><a class="btn btn-info" href="<?php echo "imprimir.php?id=" . $venta->id_venta?>"><i class="glyphicon glyphicon-arrow-down"></i></a></td>
-					<td><a class="btn btn-danger" href="<?php echo "eliminarVenta.php?id=" . $venta->id_venta?>"><i class="glyphicon glyphicon-remove"></i></a></td>
-				</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-    </body>
 </html>

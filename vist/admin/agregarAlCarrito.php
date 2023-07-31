@@ -23,11 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Verificar si el producto ya está en el carrito
             $productoEnCarrito = false;
             foreach ($carritoProductos as &$item) {
-                if ($item["id_productos"] == $producto["id_productos"]) {
+                if ($item["id"] == $producto["id_productos"]) {
                     if ($item["cantidad"] >= $cantidadExistencias) {
-                         header("Location: vender.php?status=1");
+                        header("Location: vender.php?status=3"); // Producto agotado
                         exit();
-                        
                     }
                     $item["cantidad"]++;
                     $item["subtotal"] = $item["cantidad"] * $item["precio"];
@@ -39,8 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Si el producto no está en el carrito, agregarlo
             if (!$productoEnCarrito) {
                 $nuevoProducto = [
-                    "id_productos" => $producto["id_productos"],
-                    "nom_producto" => $producto["nom_producto"],
+                    "id" => $producto["id_productos"],
+                    "nombre" => $producto["nom_producto"],
                     "descripcion" => $producto["descripcion"],
                     "precio" => $producto["precio"],
                     "cantidad" => 1,
@@ -51,8 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             $_SESSION["carrito_productos"] = $carritoProductos;
-        }else {
-            header("Location: vender.php?status=1");
+            header("Location: vender.php?status=1"); // Producto agregado correctamente
+            exit();
+        } else {
+            header("Location: vender.php?status=3"); // Producto agotado
             exit();
         }
     } else {
@@ -62,16 +63,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $servicio = $consultaServicio->fetch(PDO::FETCH_ASSOC);
 
         if ($servicio) {
+            // Check if the service already exists in the cart
+            $carritoServicios = isset($_SESSION["carrito_servicios"]) ? $_SESSION["carrito_servicios"] : [];
+            foreach ($carritoServicios as &$item) {
+                if ($item["id"] == $servicio["id_servicios"]) {
+                    header("Location: vender.php?status=6"); // Servicio ya agregado
+                    exit();
+                }
+            }
+
             $nuevoServicio = [
-                "id_servicio" => $servicio["id_servicios"],
-                "servicio" => $servicio["servicio"],
+                "id" => $servicio["id_servicios"],
+                "nombre" => $servicio["servicio"],
                 "descripcion" => $servicio["descripcion"],
                 "precio" => $servicio["precio"],
                 "cantidad" => 1,
                 "subtotal" => $servicio["precio"]
             ];
 
-            $_SESSION["carrito_servicios"][] = $nuevoServicio;
+            $carritoServicios[] = $nuevoServicio;
+            $_SESSION["carrito_servicios"] = $carritoServicios;
+            header("Location: vender.php?status=1"); // Servicio agregado correctamente
+            exit();
         } else {
             // Verificar si es un documento
             $consultaDocumento = $conectar->prepare("SELECT * FROM documentos WHERE id_documentos = ?");
@@ -79,19 +92,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $documento = $consultaDocumento->fetch(PDO::FETCH_ASSOC);
 
             if ($documento) {
+                // Check if the document already exists in the cart
+                $carritoDocumentos = isset($_SESSION["carrito_documentos"]) ? $_SESSION["carrito_documentos"] : [];
+                foreach ($carritoDocumentos as &$item) {
+                    if ($item["id"] == $documento["id_documentos"]) {
+                        header("Location: vender.php?status=7"); // Documento ya agregado
+                        exit();
+                    }
+                }
+
                 $nuevoDocumento = [
-                    "id_documento" => $documento["id_documentos"],
-                    "nombre_documento" => $documento["nombre_documento"],
+                    "id" => $documento["id_documentos"],
+                    "nombre" => $documento["documentos"],
                     "descripcion" => $documento["descripcion"],
                     "precio" => $documento["precio"],
                     "cantidad" => 1,
                     "subtotal" => $documento["precio"]
                 ];
 
-                $_SESSION["carrito_documentos"][] = $nuevoDocumento;
+                $carritoDocumentos[] = $nuevoDocumento;
+                $_SESSION["carrito_documentos"] = $carritoDocumentos;
+                header("Location: vender.php?status=1"); // Documento agregado correctamente
+                exit();
             } else {
-                header("Location: vender.php?status=3");
-                exit ();
+                header("Location: vender.php?status=2"); // Producto, servicio o documento no existe
+                exit();
             }
         }
     }
@@ -99,3 +124,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 header("Location: vender.php");
 exit();
+?>

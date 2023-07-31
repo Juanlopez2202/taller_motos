@@ -14,11 +14,11 @@ $conectar= $db->conectar();
  if ((isset($_POST["agregar"]))&&($_POST["agregar"]=="formu"))
     {
         $id=$_POST['idm'];
-        $modelo = $_POST['modelo'];
+        $color = $_POST['color'];
 
         
 
-        $validar="SELECT * FROM modelo WHERE id_modelo='$id' or modelo ='$modelo'";
+        $validar="SELECT * FROM color WHERE id_color='$id' or color ='$color'";
         $queryi=$conectar->prepare($validar);
         $queryi->execute();
         $fila1=$queryi->fetchAll(PDO::FETCH_ASSOC);
@@ -29,7 +29,7 @@ $conectar= $db->conectar();
 
         }
 
-        else if ($id=="" || $modelo=="")
+        else if ($id=="" || $color=="")
         {
             echo '<script> alert (" EXISTEN DATOS VACIOS");</script>';
             echo '<script> windows.location="index.php"</script>';
@@ -37,10 +37,10 @@ $conectar= $db->conectar();
         
         else
         {
-            $insertsql=$conectar->prepare("INSERT INTO modelo(id_modelo,modelo) VALUES (?,?);");
-            $insertsql->execute([$id,$modelo]);
+            $insertsql=$conectar->prepare("INSERT INTO color(id_color,color) VALUES (?,?);");
+            $insertsql->execute([$id,$color]);
             echo '<script>alert ("Registro Exitoso, Gracias");</script>';
-            echo '<script> window.location="modelo.php"</script>';
+            echo '<script> window.location="color.php"</script>';
         }
 
     }
@@ -58,7 +58,7 @@ $conectar= $db->conectar();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color</title>
-       <?php require_once "index.php"; ?>
+       <?php require_once "navbar.php"; ?>
        
        
 </head>

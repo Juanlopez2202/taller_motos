@@ -14,22 +14,23 @@ $conectar= $db->conectar();
  if ((isset($_POST["agregar"]))&&($_POST["agregar"]=="formu"))
     {
         $id=$_POST['idm'];
-        $modelo = $_POST['modelo'];
+        $cilindraje = $_POST['cilindraje'];
+        
 
         
 
-        $validar="SELECT * FROM modelo WHERE id_modelo='$id' or modelo ='$modelo'";
+        $validar="SELECT * FROM cilindraje WHERE id_cilindraje='$id' or cilindraje ='$cilindraje'";
         $queryi=$conectar->prepare($validar);
         $queryi->execute();
         $fila1=$queryi->fetchAll(PDO::FETCH_ASSOC);
 
         if ($fila1){
-            echo '<script> alert ("LA MARCA YA EXISTE ");</script>';
+            echo '<script> alert ("EL CILINDRAJE YA EXISTE ");</script>';
             echo '<script> windows.location= "index.php"</script>';
 
         }
 
-        else if ($id=="" || $modelo=="")
+        else if ($id=="" || $cilindraje=="")
         {
             echo '<script> alert (" EXISTEN DATOS VACIOS");</script>';
             echo '<script> windows.location="index.php"</script>';
@@ -37,10 +38,10 @@ $conectar= $db->conectar();
         
         else
         {
-            $insertsql=$conectar->prepare("INSERT INTO modelo(id_modelo,modelo) VALUES (?,?);");
-            $insertsql->execute([$id,$modelo]);
+            $insertsql=$conectar->prepare("INSERT INTO cilindraje(id_cilindraje,cilindraje) VALUES (?,?);");
+            $insertsql->execute([$id,$cilindraje]);
             echo '<script>alert ("Registro Exitoso, Gracias");</script>';
-            echo '<script> window.location="modelo.php"</script>';
+            echo '<script> window.location="cilindraje.php"</script>';
         }
 
     }
@@ -58,7 +59,7 @@ $conectar= $db->conectar();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cilindraje</title>
-       <?php require_once "index.php"; ?>
+       <?php require_once "navbar.php"; ?>
        
        
 </head>
@@ -74,10 +75,11 @@ $conectar= $db->conectar();
                         <label>Referencia</label>
 						<input type="number" oninput="maxlengthNumber(this)" maxlength="3" class="form-control input-sm" id="id" name="idm">
 						<label>Cilindraje</label>
-						<input type="text" oninput="multipletext(this)" maxlength="12" class="form-control input-sm" id="marca" name="cilindraje">
+						<input type="text" oninput="multipletext(this)" maxlength="35" class="form-control input-sm" id="marca" name="cilindraje">
+                        
                         <br>
 						
-						<button name="validar" type="submit" id="btnAgregaArticulo" class="btn btn-primary"  >Agregar</button>
+						<button name="validar" type="submit" id="btnAgregaArticulo" class="btn btn-success"  >Agregar</button>
                         <input type="hidden" name="agregar" value="formu">
 					</form>
 				</div>

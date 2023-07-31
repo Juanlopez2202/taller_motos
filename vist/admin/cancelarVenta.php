@@ -10,5 +10,5 @@ unset($_SESSION["carrito_documentos"] );
 $_SESSION["carrito_documentos"] = [];
 
 
-header("Location: ./vender.php?status=2");
+header("Location: ./vender.php?status=4");
 ?>

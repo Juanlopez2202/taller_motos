@@ -3,7 +3,7 @@
 
     $mysqlDatabaseName = 'taller_motos';
     $mysqlUserName = 'root';
-    $mysqlPassword = '1110458199';
+    $mysqlPassword = '';
     $mysqlHostName = 'localhost';
     $mysqlExportPath = 'respaldo/respaldo.sql';
 

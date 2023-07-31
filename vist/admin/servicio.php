@@ -60,7 +60,7 @@ $conectar= $db->conectar();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Servicios</title>
-       <?php require_once "index.php"; ?>
+       <?php require_once "navbar.php"; ?>
        
        
 </head>
@@ -78,7 +78,7 @@ $conectar= $db->conectar();
 						<label>Servicio</label>
 						<input type="text" oninput="multipletext(this)" maxlength="25" class="form-control input-sm" id="marca" name="servicio">
                         <label>Precio</label>
-						<input type="number" oninput="maxlengthNumber(this)" maxlength="10" class="form-control input-sm" id="id" name="precio">
+						<input type="number" oninput="maxlengthNumber(this)"  min="1" maxlength="10" class="form-control input-sm" id="id" name="precio">
                         <label>Descripcion</label>
 						<input type="text" oninput="multipletext(this)" maxlength="32" class="form-control input-sm" id="descripcion" name="descripcion">
 						<br>

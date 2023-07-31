@@ -1,6 +1,5 @@
 <?php
-
-require_once "index.php";
+require_once "navbar.php";
 
 $db = new database();
 $conectar = $db->conectar();
@@ -11,21 +10,59 @@ $consul->execute();
 $consu = $conectar->prepare("SELECT * FROM moto ");
 $consu->execute();
 
+// Obtener el valor de "status" si está presente en la URL
+$status = isset($_GET['status']) ? $_GET['status'] : '';
 
-if (isset($_GET['status'])) {
-    $status = $_GET['status'];
+// Mostrar el mensaje correspondiente según el valor de "status"
+if (isset($_GET["status"])) {
+    if ($_GET["status"] === "1") {
+        echo '<div class="alert alert-success" role="alert">
+                <strong>¡Correcto!</strong> El producto se ha agregado al carrito correctamente.
+              </div>';
+    } else if ($_GET["status"] === "2") {
+        echo '<div class="alert alert-danger" role="alert">
+                <strong>Error:</strong> El producto, servicio o documento no existe.
+              </div>';
+    } else if ($_GET["status"] === "3") {
+        echo '<div class="alert alert-warning" role="alert">
+                <strong>Advertencia:</strong> El producto no tiene existencias disponibles.
+              </div>';
+    } else if ($_GET["status"] === "4") {
+        echo '<div class="alert alert-warning" role="alert">
+                <strong>Advertencia:</strong> Venta cancelada.
+              </div>';
+    }else if ($_GET["status"] === "5") {
+        echo '<div class="alert alert-success" role="alert">
+                <strong>Advertencia:</strong> La cantidad del producto ha sido actualizada correctamente.
+              </div>';
+    
+    }else if ($_GET["status"] === "6") {
+        echo '<div class="alert alert-warning" role="alert">
+                <strong>Advertencia:</strong> El servicio ya fue agregado al carrito.
+              </div>';
+    }else if ($_GET["status"] === "7") {
+        echo '<div class="alert alert-warning" role="alert">
+                <strong>Advertencia:</strong> El documento ya fue agregado al carrito.
+              </div>';
 
-    // Mostrar mensaje de alerta según el valor de 'status'
-    if ($status == 1) {
-        echo '<script>alert("El producto ya no tiene existencias disponibles.");</script>';
-    } elseif ($status == 2) {
-        echo '<script>alert("Venta finalizada correctamente.");</script>';
+    }else if ($_GET["status"] === "8") {
+        echo '<div class="alert alert-warning" role="alert">
+                <strong>Advertencia:</strong> La moto tiene soat vigente .
+              </div>';
+
+    }else if ($_GET["status"] === "9") {
+        echo '<div class="alert alert-warning" role="alert">
+                <strong>Advertencia:</strong> La moto tiene tecnomecanica vigente  .
+              </div>';
+
     }
-   elseif ($status == 3) {
-	echo '<script>alert("El producto, el servicio o el documento no existe.");</script>';
-   }
-}
+    else if ($_GET["status"] === "10") {
+        echo '<div class="alert alert-success" role="alert">
+                <strong>Advertencia:</strong> venta realizada con exito  .
+              </div>';
 
+    }
+}    
 
 if (!isset($_SESSION["carrito_productos"])) {
     $_SESSION["carrito_productos"] = [];
@@ -39,11 +76,8 @@ if (!isset($_SESSION["carrito_documentos"])) {
     $_SESSION["carrito_documentos"] = [];
 }
 
-$granTotal_productos = 0;
-$granTotal_servicios = 0;
-$granTotal_documentos = 0;
+$granTotal = 0;
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,211 +85,135 @@ $granTotal_documentos = 0;
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../controller/styles/menu.css">
     <title>Ventas</title>
-    
+   
+    <!-- Bootstrap CSS -->
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .btn-primary,
+        .btn-success,
+        .btn-danger {
+            margin-top: 10px;
+        }
+
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Ventas</h1>
-    <br>
-    <div class="col-xs-12">
-        <ul class="nav nav-pills">
-            <li class="active"><a data-toggle="pill" href="#productos">Productos</a></li>
-            <li><a data-toggle="pill" href="#servicios">Servicios</a></li>
-            <li><a data-toggle="pill" href="#documentos">Documentos</a></li>
-        </ul>
-        <div class="tab-content">
-            <div id="productos" class="tab-pane fade in active">
-                <br>
-                <form method="post" action="agregarAlCarrito.php">
-                    <label for="codigo">Referencia de producto</label>
-                    <input autocomplete="off" autofocus class="form-control" name="codigo" required type="text" id="codigo" placeholder="Escribe la Referencia">
-                    <button type="submit" class="btn btn-primary">Agregar al carrito</button>
-                </form>
+    <div class="container">
+        <h1>Ventas</h1>
+        <br>
+        <form method="post" action="agregarAlCarrito.php">
+            <label for="servicio">Servicio</label>
+            <select class="form-control" name="codigo" id="servicio" required>
+                <option value="">Seleccione un servicio, producto o documento</option>
+                <?php
+                $consultaServicios = $conectar->prepare("SELECT id_servicios AS id, servicio AS nombre FROM servicio");
+                $consultaServicios->execute();
 
-                <table class="table table-bordered">
-                    <thead>
+                $consultaProductos = $conectar->prepare("SELECT  id_productos AS id, nom_producto AS nombre FROM productos");
+                $consultaProductos->execute();
+
+                $consultaDocumentos = $conectar->prepare("SELECT  id_documentos AS id, documentos AS nombre FROM documentos");
+                $consultaDocumentos->execute();
+
+                $resultados = array_merge($consultaServicios->fetchAll(), $consultaProductos->fetchAll(), $consultaDocumentos->fetchAll());
+
+                foreach ($resultados as $resultado) {
+                    echo "<option value='" . $resultado["id"] . "'>" . $resultado["nombre"] . "</option>";
+                }
+                ?>
+            </select>
+            <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+        </form>
+
+        <div class="table-responsive mt-3">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Valor unitario</th>
+                        <th>Quitar</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Combinar los datos de los carritos en una sola variable
+                    $carrito = array_merge($_SESSION["carrito_productos"], $_SESSION["carrito_servicios"], $_SESSION["carrito_documentos"]);
+
+                    foreach ($carrito as $indice => $item) {
+                        $granTotal += $item["subtotal"];
+                    ?>
                         <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Valor unitario</th>
-                            <th>Quitar</th>
-                            <th>Cantidad</th>
+                            <td><?php echo $item["id"]; ?></td>
+                            <td><?php echo $item["nombre"]; ?></td>
+                            <td><?php echo $item["descripcion"]; ?></td>
+                            <td><?php echo $item["precio"]; ?></td>
+                            <td><a class="btn btn-danger" href="<?php echo "quitar_del_carrito.php?indice=" . $indice; ?>">Quitar</a></td>
+                            <td>
+                                <form action="cambiar_cantidad.php" method="post">
+                                    <input name="indice" type="hidden" value="<?php echo $indice; ?>">
+                                    <input min="1" name="cantidad" class="form-control" required type="number" value="<?php echo $item["cantidad"]; ?>">
+                                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($_SESSION["carrito_productos"] as $indice => $producto) {
-                            $granTotal_productos += $producto["subtotal"];
-                        ?>
-                            <tr>
-                                <td><?php echo $producto["id_productos"]; ?></td>
-                                <td><?php echo $producto["nom_producto"]; ?></td>
-                                <td><?php echo $producto["descripcion"]; ?></td>
-                                <td><?php echo $producto["precio"]; ?></td>
-                                <td><a class="glyphicon glyphicon-remove" class="btn btn-danger" href="<?php echo "quitar_del_carrito_productos.php?indice=" . $indice; ?>"><i></i></a></td>
-                                <td>
-                                    <form action="cambiar_cantidad_productos.php" method="post">
-                                        <input name="indice" type="hidden" value="<?php echo $indice; ?>">
-                                        <input min="1" name="cantidad" class="form-control" required type="number" value="<?php echo $producto["cantidad"]; ?>">
-                                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-
-                <h3 class="total">Total: <?php echo $granTotal_productos; ?></h3>
-            </div>
-            <div id="servicios" class="tab-pane fade">
-                <br>
-                <form method="post" action="agregarAlCarrito.php">
-                    <label for="servicio">Servicio</label>
-                    <select class="form-control" name="codigo" id="servicio" required>
-                        <option value="">Seleccione un servicio</option>
-                        <?php
-                        $consultaServicios = $conectar->prepare("SELECT * FROM servicio");
-                        $consultaServicios->execute();
-                        while ($servicio = $consultaServicios->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<option value='" . $servicio["id_servicios"] . "'>" . $servicio["servicio"] . "</option>";
-                        }
-                        ?>
-                    </select>
-                    <button type="submit" class="btn btn-primary">Agregar al carrito</button>
-                </form>
-
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Valor unitario</th>
-                            <th>Quitar</th>
-                            <th>Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($_SESSION["carrito_servicios"] as $indice => $servicio) {
-                            $granTotal_servicios += $servicio["subtotal"];
-                        ?>
-                            <tr>
-                                <td><?php echo $servicio["id_servicio"]; ?></td>
-                                <td><?php echo $servicio["servicio"]; ?></td>
-                                <td><?php echo $servicio["descripcion"]; ?></td>
-                                <td><?php echo $servicio["precio"]; ?></td>
-                                <td><a class="glyphicon glyphicon-remove" class="btn btn-danger" href="<?php echo "quitar_del_carrito_servicios.php?indice=" . $indice; ?>"><i></i></a></td>
-                                <td>
-                                    <form action="cambiar_cantidad_servicios.php" method="post">
-                                        <input name="indice" type="hidden" value="<?php echo $indice; ?>">
-                                        <input min="1" name="cantidad" class="form-control" required type="number" value="<?php echo $servicio["cantidad"]; ?>">
-                                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-
-                <h3 class="total">Total: <?php echo $granTotal_servicios; ?></h3>
-            </div>
-            <div id="documentos" class="tab-pane fade">
-                <br>
-                <form method="post" action="agregarAlCarrito.php">
-                    <label for="documento">Documento</label>
-                    <select class="form-control" name="documento" id="documento" required>
-                        <option value="">Seleccione un documento</option>
-                        <?php
-                        $consultaDocumentos = $conectar->prepare("SELECT * FROM documentos");
-                        $consultaDocumentos->execute();
-                        while ($documento = $consultaDocumentos->fetch(PDO::FETCH_ASSOC)) {
-                            echo "<option value='" . $documento["id_documento"] . "'>" . $documento["nombre_documento"] . "</option>";
-                        }
-                        ?>
-                    </select>
-                    <button type="submit" class="btn btn-primary">Agregar al carrito</button>
-                </form>
-
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Valor unitario</th>
-                            <th>Quitar</th>
-                            <th>Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($_SESSION["carrito_documentos"] as $indice => $documento) {
-                            $granTotal_documentos += $documento["subtotal"];
-                        ?>
-                            <tr>
-                                <td><?php echo $documento["id_documento"]; ?></td>
-                                <td><?php echo $documento["nombre_documento"]; ?></td>
-                                <td><?php echo $documento["descripcion"]; ?></td>
-                                <td><?php echo $documento["precio"]; ?></td>
-                                <td><a class="glyphicon glyphicon-remove" class="btn btn-danger" href="<?php echo "quitar_del_carrito_documentos.php?indice=" . $indice; ?>"><i></i></a></td>
-                                <td>
-                                    <form action="cambiar_cantidad_documentos.php" method="post">
-                                        <input name="indice" type="hidden" value="<?php echo $indice; ?>">
-                                        <input min="1" name="cantidad" class="form-control" required type="number" value="<?php echo $documento["cantidad"]; ?>">
-                                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-
-                <h3 class="total">Total: <?php echo $granTotal_documentos; ?></h3>
-            </div>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
+
+        <h3 class="total">Total: <?php echo $granTotal; ?></h3>
+
+        <form action="terminarVenta.php" method="POST">
+            <label class="label1">Vehiculo</label>
+            <select class="form-control select-box" id="placa" name="placa">
+                <option disabled selected value="">Elige vehiculo por placa</option>
+                <?php foreach ($consu as $moto) { ?>
+                    <option value="<?php echo ($moto['placa']) ?>"><?php echo ($moto["placa"]) ?> </option>
+                <?php } ?>
+            </select>
+
+            <label class="label1">Vendedor</label>
+            <select class="form-control select-box" id="vendedor" name="vendedor">
+                <option disabled selected value="">Elige un vendedor</option>
+                <?php foreach ($consul as $vendedor) { ?>
+                    <option value="<?php echo ($vendedor['documento']) ?>"><?php echo ($vendedor['nombre_completo']) ?> </option>
+                <?php } ?>
+            </select>
+
+            <input name="gran_total" type="hidden" value="<?php echo $granTotal; ?>">
+            <button type="submit" class="btn btn-success">Terminar venta</button>
+            <a href="cancelarVenta.php" class="btn btn-danger">Cancelar venta</a>
+        </form>
     </div>
 
-    <br>
-    <br>
-    <form action="terminar_venta.php" method="POST">
-        <br>
-        <br>
-        <br>
-        <label class="label1">Vehiculo</label>
-        <select class="select-box selec" id="placa" name="placa">
-            <option disabled selected value="">Elige vehiculo por placa</option>
-            <?php foreach ($consu as $moto) { ?>
-                <option value="<?php echo ($moto['placa']) ?>"><?php echo ($moto["placa"]) ?> </option>
-            <?php } ?>
-        </select>
+    <!-- jQuery -->
+   
 
-		<label class="labe1" >vendedor</label>
-            	<select class="select-box selec" id="vendedor" name="vendedor">
-					<option disabled selected value="">Elige vehiculo por placa</option>
-						<?php foreach($consul as $vendedor){
-                             ?>
-								<option value="<?php echo($vendedor['documento'])?>"><?php echo($vendedor['nombre_completo'])?> </option>
-							<?php
-					
-};
-
-                             ?>
-						</select>
-        <br>
-        <br>
-        <br>
-        <input name="total_productos" type="hidden" value="<?php echo $granTotal_productos; ?>">
-        <input name="total_servicios" type="hidden" value="<?php echo $granTotal_servicios; ?>">
-        <input name="total_documentos" type="hidden" value="<?php echo $granTotal_documentos; ?>">
-        <button type="submit" class="btn btn-success">Terminar venta</button>
-        <a href="cancelarVenta.php" class="btn btn-danger">Cancelar venta</a>
-    </form>
-
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
             $('#vendedor').select2();
             $('#placa').select2();
+            $('#servicio').select2();
         });
     </script>
 </body>

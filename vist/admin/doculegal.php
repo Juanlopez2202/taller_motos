@@ -59,7 +59,7 @@ $conectar= $db->conectar();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentos legales</title>
-       <?php require_once "index.php"; ?>
+       <?php require_once "navbar.php"; ?>
        
        
 </head>
@@ -77,7 +77,7 @@ $conectar= $db->conectar();
 						<label>Documento legal</label>
 						<input type="text" oninput="multipletext(this)" maxlength="20" class="form-control input-sm" id="marca" name="doculegal">
                         <label>Precio</label>
-						<input type="number" oninput="maxlengthNumber(this)" maxlength="10" class="form-control input-sm" id="id" name="precio">
+						<input type="number" oninput="maxlengthNumber(this)" min="1" maxlength="10" class="form-control input-sm" id="id" name="precio" required>
 						<br>
 						<button name="validar" type="submit" id="btnAgregaArticulo" class="btn btn-primary"  >Agregar</button>
                         <input type="hidden" name="agregar" value="formu">

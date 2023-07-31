@@ -4,7 +4,7 @@ session_start();
 $db = new Database();
 $conectar = $db->conectar();
 
-if(isset($_POST["validar"])) {
+if (isset($_POST["validar"])) {
     $usuario = $_POST["usuario"];
     $clave = $_POST["clave"];
     $cedula = $_POST["documento"];
@@ -37,10 +37,10 @@ if(isset($_POST["validar"])) {
                     header("Location: vist/admin/index.php");
                     exit();
                 } else if ($_SESSION['tipo'] == 2 && $_SESSION['estado'] == 1) {
-                    header("Location: ../vist/aprendiz/index.php");
+                    header("Location: vist/usuario/index.php");
                     exit();
                 } else if ($_SESSION['tipo'] == 3 && $_SESSION['estado'] == 1) {
-                    header("Location: ../vist/instructor/index.php");
+                    header("Location: ");
                     exit();
                 } else {
                     echo '<script>alert("ESTE USUARIO ESTÁ INACTIVO");</script>';
@@ -53,9 +53,29 @@ if(isset($_POST["validar"])) {
                 exit();
             }
         } else {
-            echo '<script>alert("Contraseña Incorrecta");</script>';
-            echo '<script>window.location="index.html"</script>';
-            exit();
+            $intentosPermitidos = 3; // Número máximo de intentos permitidos
+
+            // Verificar si la variable de sesión existe, si no existe, establecerla en 1
+            if (!isset($_SESSION['intentos'])) {
+                $_SESSION['intentos'] = 1;
+            } else {
+                // Si ya existe la variable de sesión, aumentar el conteo de intentos
+                $_SESSION['intentos']++;
+            }
+
+            // Si se alcanza el número máximo de intentos, bloquear al usuario
+            if ($_SESSION['intentos'] >= $intentosPermitidos) {
+                $bloqueo = $conectar->prepare("UPDATE usuarios SET id_estado = '2' WHERE documento = '$cedula'");
+                $bloqueo->execute();
+                echo '<script>alert("Ha excedido el número de intentos, por tal motivo ha sido bloqueado");</script>';
+                echo '<script>window.location="vist/admin/bloqueo.php"</script>';
+                exit();
+            } else {
+                // Si la contraseña es incorrecta, mostrar un mensaje y permitir otro intento
+                echo '<script>alert("Contraseña Incorrecta. Intento ' . $_SESSION['intentos'] . ' de ' . $intentosPermitidos . '");</script>';
+                echo '<script>window.location="index.html"</script>';
+                exit();
+            }
         }
     } else {
         echo '<script>alert("Usuario no encontrado");</script>';
@@ -68,5 +88,3 @@ if(isset($_POST["validar"])) {
     exit();
 }
 ?>
-
-    

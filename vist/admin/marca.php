@@ -58,7 +58,7 @@ $conectar= $db->conectar();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marca</title>
-       <?php require_once "index.php"; ?>
+       <?php require_once "navbar.php"; ?>
        
        
 </head>
@@ -76,7 +76,7 @@ $conectar= $db->conectar();
 						<label>Marca</label>
 						<input type="text" oninput="multipletext(this)" maxlength="15" class="form-control input-sm" id="marca" name="marca">
 						<br>
-						<button name="validar" type="submit" id="btnAgregaArticulo" class="btn btn-primary"  >Agregar</button>
+						<button name="validar" type="submit" id="btnAgregaArticulo" class="btn btn-success"  >Agregar</button>
                         <input type="hidden" name="agregar" value="formu">
 					</form>
 				</div>

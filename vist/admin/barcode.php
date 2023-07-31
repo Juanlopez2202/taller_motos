@@ -18,7 +18,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="codigo/JsBarcode.all.min.js"></script>
     <title>Codigo de barras</title>
-    <?php require_once "index.php"; ?>
+    <?php require_once "navbar.php"; ?>
 </head>
 <body>
     <div class="container">
