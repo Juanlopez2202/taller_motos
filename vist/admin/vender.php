@@ -62,6 +62,23 @@ if (isset($_GET["status"])) {
               </div>';
 
     }
+    else if ($_GET["status"] === "11") {
+        echo '<div class="alert alert-success" role="alert">
+                <strong>Advertencia:</strong> Producto eliminado del carrito  .
+              </div>';
+
+    }
+    else if ($_GET["status"] === "12") {
+        echo '<div class="alert alert-success" role="alert">
+                <strong>Advertencia:</strong> Serivicio eliminado del carrito  .
+              </div>';
+
+    } else if ($_GET["status"] === "13") {
+        echo '<div class="alert alert-success" role="alert">
+                <strong>Advertencia:</strong> Documento eliminado del carrito  .
+              </div>';
+
+    }
 }    
 
 if (!isset($_SESSION["carrito_productos"])) {
@@ -167,7 +184,7 @@ $granTotal = 0;
                             <td><?php echo $item["nombre"]; ?></td>
                             <td><?php echo $item["descripcion"]; ?></td>
                             <td><?php echo $item["precio"]; ?></td>
-                            <td><a class="btn btn-danger" href="<?php echo "quitar_del_carrito.php?indice=" . $indice; ?>">Quitar</a></td>
+                            <td><a class="btn btn-danger" href="<?php echo "quitarDelCarrito.php?indice=" . $indice; ?>">Quitar</a></td>
                             <td>
                                 <form action="cambiar_cantidad.php" method="post">
                                     <input name="indice" type="hidden" value="<?php echo $indice; ?>">
