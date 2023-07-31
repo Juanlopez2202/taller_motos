@@ -32,6 +32,9 @@ if (isset($_POST["validar"])) {
                 $_SESSION['usuario'] = $fila['usuario'];
                 $_SESSION['estado'] = $fila['id_estado'];
                 $_SESSION['email'] = $fila['email'];
+ // Si las credenciales son correctas y el inicio de sesión es exitoso, borramos la variable de sesión 'intentos'
+                   unset($_SESSION['intentos']);
+
 
                 if ($_SESSION['tipo'] == 1 && $_SESSION['estado'] == 1) {
                     header("Location: vist/admin/index.php");
