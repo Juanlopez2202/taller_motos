@@ -60,18 +60,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Cuenta</title>
     <!-- Bootstrap CSS -->
+    <style>
+    /* Definir una clase personalizada para un tamaño de encabezado */
+    .tamaño {
+      font-size: 2rem; /* Tamaño de fuente personalizado */
+      font-weight: bold; /* Otras propiedades de estilo, si las deseas */
+      color: #333;
+    }
+    .h1 {
+      font-size: 3.5rem; /* Tamaño de fuente personalizado */
+      font-weight: bold; /* Otras propiedades de estilo, si las deseas */
+      color: #333;
+    }
+  </style>
 </head>
 
 <body>
     <?php require_once("navar.php");?>
 
     <div class="container mt-5">
-        <h1>Bienvenido a tu cuenta</h1>
+        <h1 class="h1">Bienvenido a tu cuenta</h1>
 
         <?php foreach ($motosPaginadas as $moto) { ?>
             <div class="accordion mb-3" id="accordion-<?php echo $moto['placa']; ?>">
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading-<?php echo $moto['placa']; ?>">
+                    <h2 class="accordion-header tamaño" id="heading-<?php echo $moto['placa']; ?>">
 
                             Información de tu moto (Placa: <?php echo strtoupper( $moto['placa']); ?>)
                        
@@ -86,7 +99,7 @@
                             <p><strong>Color:</strong> <?php echo $moto['color']; ?></p>
                             
                             <!-- Información de cambio de aceite -->
-                            <h2>Información de Cambio de Aceite</h2>
+                            <h2 class="tamaño">Información de Cambio de Aceite</h2>
                             <?php
                                 // Obtener información de cambio de aceite de la tabla "moto"
                                 $ultimocambio = $moto["ultimo_cambio"];
@@ -109,7 +122,7 @@
                             ?>
 
                             <!-- Tabla de Facturas de Venta para esta moto -->
-                            <h2>Facturas de Venta</h2>
+                            <h2 class="tamaño">Facturas de Venta</h2>
                             <?php
                                 $consultaFacturas = $conectar->prepare("
                                     SELECT

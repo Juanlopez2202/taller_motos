@@ -62,18 +62,35 @@
     <title>Informacion Documentos</title>
     <!-- Bootstrap CSS -->
   
+    <style>
+    /* Definir una clase personalizada para un tamaño de encabezado */
+    .tamaño {
+      font-size: 2rem; /* Tamaño de fuente personalizado */
+      font-weight: bold; /* Otras propiedades de estilo, si las deseas */
+      color: #333;
+    }
+    .h1 {
+      font-size: 3.5rem; /* Tamaño de fuente personalizado */
+      font-weight: bold; /* Otras propiedades de estilo, si las deseas */
+      color: #333;
+    }
+  </style>
+
+
+    
 </head>
 
 <body>
+    
     <?php require_once("navar.php");?>
 
     <div class="container mt-5">
-        <h1 class="mb-4">Bienvenido a tu cuenta</h1>
+        <h1 class="h1" >Informacion Documentos Legales</h1>
 
         <?php foreach ($motosPaginadas as $moto) { ?>
             <div class="card mb-3">
                 <div class="card-header">
-                <h2>INFORMACIÓN DE TU MOTO (PLACA: <?php echo strtoupper($moto['placa']); ?>)</h2>
+                <h2 class="tamaño" >INFORMACIÓN DE TU MOTO (PLACA: <?php echo strtoupper($moto['placa']); ?>)</h2>
                 </div>
                 <div class="card-body">
                     <p><strong>Cliente:</strong> <?php echo $moto['nombre_cliente']; ?></p>
