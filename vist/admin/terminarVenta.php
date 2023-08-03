@@ -9,7 +9,7 @@ if (!isset( $_POST["placa"])) {
     echo '<script>alert("NO HAS COLOCADO LA PLACA DEL VEHICULO");</script>';
     echo '<script>window.location="vender.php"</script>';
 }
-if (($_SESSION["carrito_productos"]) && empty($_SESSION["carrito_servicios"]) && empty($_SESSION["carrito_documentos"])) {
+if ((empty($_SESSION["carrito_productos"])) && empty($_SESSION["carrito_servicios"]) && empty($_SESSION["carrito_documentos"])) {
     echo '<script>alert("NO HAS AGREGADO NADA AL CARRITO ");</script>';
     echo '<script>window.location="vender.php"</script>';
     exit();

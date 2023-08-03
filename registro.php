@@ -85,9 +85,7 @@ if ((isset($_POST["agregar"]))&&($_POST["agregar"]=="formu"))
 </head>
 <body>
 	<main>
-        <div class="contenedor-img registo-img">
-            <img class="imagen" src="controller/img/27520215_7323981.jpg" alt="imagen logo">
-        </div>
+        
 		<form method="POST" autocomplete="off" class="formulario" id="formulario">
         <h1>Registro de usuario</h1>
 			<!-- Grupo: Documento -->
@@ -184,7 +182,7 @@ if ((isset($_POST["agregar"]))&&($_POST["agregar"]=="formu"))
             </div>
 
 			<div class="formulario__grupo formulario__grupo-btn-enviar">
-				<input class="btn" type="submit" value="Registrarme">
+				<button class="btn" type="submit">Registrate</button>
 				<input type="hidden" name="agregar" value="formu">
 			</div>
 

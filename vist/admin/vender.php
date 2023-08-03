@@ -128,6 +128,9 @@ $granTotal = 0;
             font-size: 24px;
             font-weight: bold;
         }
+        .oculto{
+            visibility: hidden;
+        }
     </style>
 </head>
 
@@ -163,7 +166,7 @@ $granTotal = 0;
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Valor unitario</th>
@@ -180,10 +183,11 @@ $granTotal = 0;
                         $granTotal += $item["subtotal"];
                     ?>
                         <tr>
-                            <td><?php echo $item["id"]; ?></td>
+                            
                             <td><?php echo $item["nombre"]; ?></td>
                             <td><?php echo $item["descripcion"]; ?></td>
                             <td><?php echo $item["precio"]; ?></td>
+                         
                             <td><a class="btn btn-danger" href="<?php echo "quitarDelCarrito.php?indice=" . $indice; ?>">Quitar</a></td>
                             <td>
                                 <form action="cambiar_cantidad.php" method="post">
@@ -192,6 +196,7 @@ $granTotal = 0;
                                     <button type="submit" class="btn btn-primary">Actualizar</button>
                                 </form>
                             </td>
+                            <td class="oculto"><?php echo $item["id"]; ?></td>
                         </tr>
                     <?php } ?>
                 </tbody>

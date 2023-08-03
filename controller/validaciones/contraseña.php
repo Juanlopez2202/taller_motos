@@ -9,8 +9,17 @@ session_start();
 if((isset($_POST['actualizar'])))
    {
      $contra=$_POST['contra'];
-      
+     $documento =$_POST['docu'];
+     $sqli = $conexion->prepare("SELECT password FROM usuarios WHERE documento = :documento");
+     $sqli->bindParam(':documento', $documento);
+     $sqli->execute();
+     $fila1 = $sqli->fetch();
     
+     if(!$fila1){
+        echo '<script>alert("El usuario no existe ");</script>';
+        echo '<script>window.location="contraseña.php"</script>';
+        exit();
+     }
     $clave_procesada=password_hash($contra,PASSWORD_BCRYPT,["cost"=>15]);
     
 
@@ -28,7 +37,7 @@ if((isset($_POST['actualizar'])))
     
     else
     {
-        $documento = $_SESSION['documento'];
+        
         $insertsql=$conexion->prepare("UPDATE usuarios SET password ='$clave_procesada' where documento='$documento'");
         $insertsql->execute();
         
@@ -39,23 +48,7 @@ if((isset($_POST['actualizar'])))
 }
 ?>
 
-<?php
 
- if($_POST['enviar']){
- 
-    $documento = $_POST["documento"];
-    
-    $sql=$conexion->prepare("SELECT * FROM usuarios WHERE documento= '$documento'");
-    $sql->execute();
-    $fila=$sql->fetch();
-    
-    if($fila){
-        $_SESSION['documento']=$fila['documento'];
-    
-
-
-
-?>
 
 
 
@@ -85,11 +78,15 @@ if((isset($_POST['actualizar'])))
             <h1>recuperar contraseña</h1>
             <p>completa la informacion</p>
             <div class="campo">
-                <label for="contra">contraseña</label>
+                <label for="documento">Documento</label>
+                <input type="number" oninput="multipletext(this);" minlength="6" maxlength="11" placeholder="Documento" id="contra" name="docu" >
+            </div>
+            <div class="campo">
+                <label for="contraseña">contraseña</label>
                 <input type="password" oninput="multipletext(this);" minlength="6" maxlength="12" placeholder="nueva contraseña" id="contra" name="contra" >
             </div>
             <div class="campo">
-                <label for="documento">confirme contraseña</label>
+                <label for="confirme contraseña">confirme contraseña</label>
                 <input type="password" oninput="multipletext(this);" minlength="6" maxlength="12" placeholder="confirme contraseña" id="contraseña" name="contraseña" >
             </div>
             
@@ -135,13 +132,6 @@ if((isset($_POST['actualizar'])))
     </script>
 </body>
 </html>
-<?php
-   }  
 
-   else{
-    echo '<script>alert ("El documento no existe en la base de  datos");</script>';
-    echo '<script>window.location="../../contraseña.html"</script>';
-   }
 
-}
-?>
+

@@ -2,7 +2,7 @@
 
 
     include("../../controller/validar.php");
-
+       
     require_once("../../bd/conexion.php");
     $db = new Database();
     $conectar= $db->conectar();
@@ -18,13 +18,8 @@
   } 
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-<link rel="shortcut icon" href="../../controller/img/icono.png" type="image/x-icon">
-  <title>Menu administrador</title>
-</head>
-<body>
+
+
 
   <!-- Begin Navbar -->
   <div id="nav">
@@ -110,19 +105,10 @@
           </li>
         </ul>
       </div>
-      <!--/.nav-collapse -->
+      
     </div>
     <!--/.contatiner -->
   </div>
 </div>
 <!-- Main jumbotron for a primary marketing message or call to action -->
 
-
-
-
-
-<!-- /container -->        
-
-
-</body>
-</html>

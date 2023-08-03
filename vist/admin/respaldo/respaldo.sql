@@ -209,7 +209,7 @@ CREATE TABLE `detalle_vdocu` (
   KEY `id_venta` (`id_venta`),
   CONSTRAINT `detalle_vdocu_ibfk_2` FOREIGN KEY (`id_venta`) REFERENCES `factura_venta` (`id_venta`) ON UPDATE CASCADE,
   CONSTRAINT `detalle_vdocu_ibfk_3` FOREIGN KEY (`id_documentos`) REFERENCES `documentos` (`id_documentos`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,6 +218,7 @@ CREATE TABLE `detalle_vdocu` (
 
 LOCK TABLES `detalle_vdocu` WRITE;
 /*!40000 ALTER TABLE `detalle_vdocu` DISABLE KEYS */;
+INSERT INTO `detalle_vdocu` VALUES (36,'10',1000000.00,93),(37,'20',200000.00,93);
 /*!40000 ALTER TABLE `detalle_vdocu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -269,7 +270,7 @@ CREATE TABLE `detalle_vservi` (
   KEY `id_venta` (`id_venta`),
   CONSTRAINT `detalle_vservi_ibfk_2` FOREIGN KEY (`id_venta`) REFERENCES `factura_venta` (`id_venta`) ON UPDATE CASCADE,
   CONSTRAINT `detalle_vservi_ibfk_3` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id_servicios`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -278,7 +279,7 @@ CREATE TABLE `detalle_vservi` (
 
 LOCK TABLES `detalle_vservi` WRITE;
 /*!40000 ALTER TABLE `detalle_vservi` DISABLE KEYS */;
-INSERT INTO `detalle_vservi` VALUES (18,'25',1,50000.00,87),(19,'25',1,50000.00,88),(20,'25',1,50000.00,89),(21,'25',1,50000.00,90);
+INSERT INTO `detalle_vservi` VALUES (22,'25',1,50000.00,93),(23,'25',1,50000.00,94),(24,'25',1,50000.00,95);
 /*!40000 ALTER TABLE `detalle_vservi` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -352,7 +353,7 @@ CREATE TABLE `factura_venta` (
   KEY `placa` (`placa`),
   CONSTRAINT `factura_venta_ibfk_2` FOREIGN KEY (`documento`) REFERENCES `usuarios` (`documento`),
   CONSTRAINT `factura_venta_ibfk_3` FOREIGN KEY (`placa`) REFERENCES `moto` (`placa`)
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -361,7 +362,7 @@ CREATE TABLE `factura_venta` (
 
 LOCK TABLES `factura_venta` WRITE;
 /*!40000 ALTER TABLE `factura_venta` DISABLE KEYS */;
-INSERT INTO `factura_venta` VALUES (87,'2023-07-31',1234567890,50000.00,'100569',NULL,NULL),(88,'2023-07-31',1234567890,50000.00,'100569',NULL,NULL),(89,'2023-07-31',1234567890,50000.00,'100569',NULL,NULL),(90,'2023-07-30',1234567890,50000.00,'100569',NULL,NULL);
+INSERT INTO `factura_venta` VALUES (93,'2023-07-31',1234567890,1250000.00,'100569','2024-07-31','2024-07-31'),(94,'2023-08-02',1234567890,50000.00,'100569',NULL,NULL),(95,'2023-08-02',1234567890,50000.00,'slx02f',NULL,NULL);
 /*!40000 ALTER TABLE `factura_venta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -496,7 +497,7 @@ CREATE TABLE `moto` (
 
 LOCK TABLES `moto` WRITE;
 /*!40000 ALTER TABLE `moto` DISABLE KEYS */;
-INSERT INTO `moto` VALUES ('100569',1,'jsjsj',1005691779,406,'2023-07-30',3000,'2023-08-29',1,1,2,1,1,1,1,2,1,'7272871828','818282','72737372','100569'),('slx02f',1,'kd',1005691779,383,'2023-07-30',3000,'2023-08-29',1,1,2,1,1,1,1,2,1,'939393939','2838383838','83838348','slx02f');
+INSERT INTO `moto` VALUES ('100569',1,'jsjsj',1005691779,406,'2023-08-02',3000,'2023-09-01',1,1,2,1,1,1,1,2,1,'7272871828','818282','72737372','100569'),('slx02f',1,'kd',1005691779,383,'2023-08-02',3000,'2023-09-01',1,1,2,1,1,1,1,2,1,'939393939','2838383838','83838348','slx02f');
 /*!40000 ALTER TABLE `moto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -687,7 +688,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1234567,'elver ','3818813929','lopezcerquerajuanfrancisco@gmail','2023-07-28','jusjqww223','$2y$15$5a46XlI6dwRWGc9jBQ1Pru5HjIOJYMOEZ.qesWX5ZWPf88isEM9Bm',2,1),(1005691779,'Juan francisco lopez','3136101695','lopezcerquerajuanfrancisco@gmail','2002-02-22','juan123','$2y$15$cKOZkiXOgzMIOjd.u7EXJOG.ZqrfsH6k2VS5HbZ32kAhZkm01rVhG',2,1),(1234567890,'Sebastian','3087561234','juan@gmail.com','2005-03-28','admin','$2y$15$ddMGJZCJjRyJFDPP5Yszt.v.2yet7P3scBUVe7gRMaFPQV1y8Btne',1,1);
+INSERT INTO `usuarios` VALUES (1234567,'elver ','3818813929','lopezcerquerajuanfrancisco@gmail','2023-07-28','jusjqww223','$2y$15$5a46XlI6dwRWGc9jBQ1Pru5HjIOJYMOEZ.qesWX5ZWPf88isEM9Bm',2,1),(1005691779,'Juan francisco lopez','3136101695','lopezcerquerajuanfrancisco@gmail','2002-02-22','juan123','$2y$15$UdvApX1LjLyuG7.wua24P.d4AmZNDPfH7ZSF0QJx3/2.e9YRXuYdK',2,1),(1234567890,'Sebastian','3087561234','juan@gmail.com','2005-03-28','admin','$2y$15$DZJSIcPmDvzVto7MuezWOe3m5FuXanZsRbXm3Q7xLOiJ498Sba2nm',1,1);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -700,4 +701,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-30 18:20:38
+-- Dump completed on 2023-08-02 23:32:10
