@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-07-2023 a las 05:50:57
+-- Tiempo de generación: 03-08-2023 a las 16:01:09
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -20,6 +20,24 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `taller_motos`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `aseguradora`
+--
+
+CREATE TABLE `aseguradora` (
+  `id_aseguradora` int(11) NOT NULL,
+  `aseguradora` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `aseguradora`
+--
+
+INSERT INTO `aseguradora` (`id_aseguradora`, `aseguradora`) VALUES
+(1, 'Sura S.A');
 
 -- --------------------------------------------------------
 
@@ -154,6 +172,14 @@ CREATE TABLE `detalle_vdocu` (
   `id_venta` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `detalle_vdocu`
+--
+
+INSERT INTO `detalle_vdocu` (`id_detadocu`, `id_documentos`, `subtotal`, `id_venta`) VALUES
+(39, '10', 1000000.00, 98),
+(41, '10', 1000000.00, 101);
+
 -- --------------------------------------------------------
 
 --
@@ -167,6 +193,13 @@ CREATE TABLE `detalle_venta` (
   `id_venta` int(11) NOT NULL,
   `subtotal` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_venta`
+--
+
+INSERT INTO `detalle_venta` (`id_detallev`, `id_producto`, `cantidad`, `id_venta`, `subtotal`) VALUES
+(18, '1', 1, 99, 123234.00);
 
 -- --------------------------------------------------------
 
@@ -237,8 +270,18 @@ CREATE TABLE `factura_venta` (
   `total` decimal(10,2) NOT NULL,
   `placa` varchar(8) NOT NULL,
   `fecha_vigencia_soat` date DEFAULT NULL,
-  `fecha_vigencia_tecnomecanica` date DEFAULT NULL
+  `fecha_vigencia_tecnomecanica` date DEFAULT NULL,
+  `aseguradora` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `factura_venta`
+--
+
+INSERT INTO `factura_venta` (`id_venta`, `fecha`, `documento`, `total`, `placa`, `fecha_vigencia_soat`, `fecha_vigencia_tecnomecanica`, `aseguradora`) VALUES
+(98, '2023-08-03', 1234567890, 1000000.00, '100569', '2024-08-03', NULL, 1),
+(99, '2023-08-03', 1234567890, 123234.00, '100569', NULL, NULL, NULL),
+(101, '2023-08-03', 1234567890, 1000000.00, 'slx02f', '2024-08-03', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -329,8 +372,8 @@ CREATE TABLE `moto` (
 --
 
 INSERT INTO `moto` (`placa`, `id_marca`, `descripcion`, `documento`, `km`, `ultimo_cambio`, `proximo_cambio_km`, `proximo_cambio_fecha`, `id_linea`, `id_modelo`, `id_cilindraje`, `id_color`, `id_tip_servicio`, `id_clase`, `id_carroceria`, `capacidad`, `id_combustible`, `numero_motor`, `vin`, `numero_chasis`, `barcode`) VALUES
-('100569', 1, 'jsjsj', 1005691779, 406, '2023-07-30', 3000, '2023-08-29', 1, 1, 2, 1, 1, 1, 1, 2, 1, '7272871828', '818282', '72737372', '100569'),
-('slx02f', 1, 'kd', 1005691779, 383, '2023-07-30', 3000, '2023-08-29', 1, 1, 2, 1, 1, 1, 1, 2, 1, '939393939', '2838383838', '83838348', 'slx02f');
+('100569', 1, 'jsjsj', 1005691779, 406, '2023-08-02', 3000, '2023-09-01', 1, 1, 2, 1, 1, 1, 1, 2, 1, '7272871828', '818282', '72737372', '100569'),
+('slx02f', 1, 'kd', 1005691779, 383, '2023-08-02', 3000, '2023-09-01', 1, 1, 2, 1, 1, 1, 1, 2, 1, '939393939', '2838383838', '83838348', 'slx02f');
 
 -- --------------------------------------------------------
 
@@ -355,7 +398,7 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id_productos`, `nom_producto`, `precio`, `descripcion`, `cantidad_ini`, `cantidad_ant`, `id_estado`, `barcode`, `tipo`) VALUES
-('1', 'tornillos', 123234.00, 'jsjsj', 2, 0, 3, '12', 'producto');
+('1', 'tornillos', 123234.00, 'jsjsj', 0, 0, 3, '12', 'producto');
 
 -- --------------------------------------------------------
 
@@ -476,12 +519,18 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`documento`, `nombre_completo`, `telefono`, `email`, `fecha_usu`, `usuario`, `password`, `id_tip_usu`, `id_estado`) VALUES
 (1234567, 'elver ', '3818813929', 'lopezcerquerajuanfrancisco@gmail', '2023-07-28', 'jusjqww223', '$2y$15$5a46XlI6dwRWGc9jBQ1Pru5HjIOJYMOEZ.qesWX5ZWPf88isEM9Bm', 2, 1),
-(1005691779, 'Juan francisco lopez', '3136101695', 'lopezcerquerajuanfrancisco@gmail', '2002-02-22', 'juan123', '$2y$15$cKOZkiXOgzMIOjd.u7EXJOG.ZqrfsH6k2VS5HbZ32kAhZkm01rVhG', 2, 1),
-(1234567890, 'Sebastian', '3087561234', 'juan@gmail.com', '2005-03-28', 'admin', '$2y$15$ddMGJZCJjRyJFDPP5Yszt.v.2yet7P3scBUVe7gRMaFPQV1y8Btne', 1, 1);
+(1005691779, 'Juan francisco lopez', '3136101695', 'lopezcerquerajuanfrancisco@gmail', '2002-02-22', 'juan123', '$2y$15$UdvApX1LjLyuG7.wua24P.d4AmZNDPfH7ZSF0QJx3/2.e9YRXuYdK', 2, 1),
+(1234567890, 'Sebastian', '3087561234', 'juan@gmail.com', '2005-03-28', 'admin', '$2y$15$DZJSIcPmDvzVto7MuezWOe3m5FuXanZsRbXm3Q7xLOiJ498Sba2nm', 1, 1);
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `aseguradora`
+--
+ALTER TABLE `aseguradora`
+  ADD PRIMARY KEY (`id_aseguradora`);
 
 --
 -- Indices de la tabla `barcode`
@@ -570,7 +619,8 @@ ALTER TABLE `estado`
 ALTER TABLE `factura_venta`
   ADD PRIMARY KEY (`id_venta`),
   ADD KEY `fk` (`documento`,`placa`),
-  ADD KEY `placa` (`placa`);
+  ADD KEY `placa` (`placa`),
+  ADD KEY `aseguradora` (`aseguradora`);
 
 --
 -- Indices de la tabla `linea`
@@ -656,6 +706,12 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `aseguradora`
+--
+ALTER TABLE `aseguradora`
+  MODIFY `id_aseguradora` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de la tabla `barcode`
 --
 ALTER TABLE `barcode`
@@ -683,25 +739,25 @@ ALTER TABLE `detalle_compra`
 -- AUTO_INCREMENT de la tabla `detalle_vdocu`
 --
 ALTER TABLE `detalle_vdocu`
-  MODIFY `id_detadocu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id_detadocu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detallev` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_detallev` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_vservi`
 --
 ALTER TABLE `detalle_vservi`
-  MODIFY `id_detaservi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_detaservi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `factura_venta`
 --
 ALTER TABLE `factura_venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT de la tabla `marca`
@@ -745,7 +801,8 @@ ALTER TABLE `detalle_vservi`
 --
 ALTER TABLE `factura_venta`
   ADD CONSTRAINT `factura_venta_ibfk_2` FOREIGN KEY (`documento`) REFERENCES `usuarios` (`documento`),
-  ADD CONSTRAINT `factura_venta_ibfk_3` FOREIGN KEY (`placa`) REFERENCES `moto` (`placa`);
+  ADD CONSTRAINT `factura_venta_ibfk_3` FOREIGN KEY (`placa`) REFERENCES `moto` (`placa`),
+  ADD CONSTRAINT `factura_venta_ibfk_4` FOREIGN KEY (`aseguradora`) REFERENCES `aseguradora` (`id_aseguradora`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `moto`
