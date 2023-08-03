@@ -14,7 +14,7 @@ if ((empty($_SESSION["carrito_productos"])) && empty($_SESSION["carrito_servicio
     echo '<script>window.location="vender.php"</script>';
     exit();
 }
-if (!isset($_POST["venderor"])) {
+if (!isset($_POST["vendedor"])) {
     echo '<script>alert("NO HAS SELECCIONADO LA CEDULA DEL VENDEDOR");</script>';
     echo '<script>window.location="vender.php"</script>';
 }
@@ -36,8 +36,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validar si se vende el servicio con ID 25 (Cambio de Aceite)
     $ventaCambioAceite = false;
     foreach ($_SESSION["carrito_servicios"] as $servicio) {
-        $id_servicio = $servicio["id"];
-        if ($id_servicio === "25") {
+        $nombre = $servicio["nombre"];
+        if ($nombre === "cambio aceite") {
             $ventaCambioAceite = true;
             break;
         }
@@ -81,18 +81,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if ($ventaSOAT) {
+            if (!isset($_POST["aseguradora"])) {
+                echo '<script>alert("Agregue la Aseguradora");</script>';
+                echo '<script>window.location="vender.php"</script>';
+                exit();
+            }
             $fechaVigenciaSoat = date("Y-m-d", strtotime("+1 year"));
+            $empresa = $_POST['aseguradora'];
         }
 
         if ($ventaTecnomecanica) {
+            if (!isset($_POST["aseguradora"])) {
+                echo '<script>alert("Agregue la Aseguradora");</script>';
+                echo '<script>window.location="vender.php"</script>';
+                exit();
+            }
             $fechaVigenciaTecnomecanica = date("Y-m-d", strtotime("+1 year"));
+           
+            $empresa = $_POST['aseguradora'];
         }
     }
 
-    $insertVenta = $conectar->prepare("INSERT INTO factura_venta (placa, fecha, fecha_vigencia_soat, fecha_vigencia_tecnomecanica, documento, total) VALUES (?, ?, ?, ?, ?, ?)");
+    $insertVenta = $conectar->prepare("INSERT INTO factura_venta (placa, fecha, fecha_vigencia_soat, fecha_vigencia_tecnomecanica,aseguradora,documento, total) VALUES (?, ?, ?, ?, ?,?, ?)");
 
     // Establecer las fechas de vigencia según el tipo de documento vendido
-    $insertVenta->execute([$placa, $fechaVenta, $fechaVigenciaSoat, $fechaVigenciaTecnomecanica, $vendedor, $total]);
+    $insertVenta->execute([$placa, $fechaVenta, $fechaVigenciaSoat, $fechaVigenciaTecnomecanica,$empresa, $vendedor, $total]);
     
     // Obtener el ID de la venta recién insertada
     $id_venta = $conectar->lastInsertId();

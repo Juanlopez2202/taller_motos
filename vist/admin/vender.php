@@ -9,6 +9,9 @@ $consul->execute();
 
 $consu = $conectar->prepare("SELECT * FROM moto ");
 $consu->execute();
+$consua = $conectar->prepare("SELECT * FROM aseguradora ");
+$consua->execute();
+
 
 // Obtener el valor de "status" si está presente en la URL
 $status = isset($_GET['status']) ? $_GET['status'] : '';
@@ -213,6 +216,13 @@ $granTotal = 0;
                     <option value="<?php echo ($moto['placa']) ?>"><?php echo ($moto["placa"]) ?> </option>
                 <?php } ?>
             </select>
+            <label class="label1">Aseguradora</label>
+            <select class="form-control select-box" id="aseguradora" name="aseguradora">
+                <option disabled selected value="">Elige</option>
+                <?php foreach ($consua as $aseguradora) { ?>
+                    <option value="<?php echo ($aseguradora['id_aseguradora']) ?>"><?php echo ($aseguradora["aseguradora"]) ?> </option>
+                <?php } ?>
+            </select>
 
             <label class="label1">Vendedor</label>
             <select class="form-control select-box" id="vendedor" name="vendedor">
@@ -236,6 +246,7 @@ $granTotal = 0;
             $('#vendedor').select2();
             $('#placa').select2();
             $('#servicio').select2();
+            $('#aseguradora').select2();
         });
     </script>
 </body>

@@ -47,6 +47,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-list-alt"></span>‎ ‎ ‎Menu <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="cilindraje.php">Cilindraje</a></li>
+              <li><a href="aseguradora.php">Aseguradora</a></li>
               <li><a href="color.php">Color</a></li>
               <li><a href="combustible.php">Combustible</a></li>
               <li><a href="doculegal.php">Documentos legales</a></li>

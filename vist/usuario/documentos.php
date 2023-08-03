@@ -19,6 +19,7 @@
             ma.marca,
             ci.cilindraje,
             co.color,
+            ase.aseguradora,
             fv.fecha,
             fv.fecha_vigencia_soat, 
             fv.fecha_vigencia_tecnomecanica, 
@@ -31,6 +32,7 @@
         INNER JOIN cilindraje ci ON m.id_cilindraje = ci.id_cilindraje
         INNER JOIN color co ON m.id_color = co.id_color
         LEFT JOIN factura_venta fv ON m.placa = fv.placa
+        LEFT JOIN aseguradora ase  ON fv.aseguradora = ase.id_aseguradora
         WHERE m.documento = ?
         GROUP BY m.placa
     ");
@@ -121,6 +123,7 @@
                                 <tr>
                                     <th>Fechas de Vencimiento del SOAT</th>
                                     <th>Días Restantes</th>
+                                    <th>Aseguradora</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -130,6 +133,7 @@
                                     <tr>
                                         <td><?php echo $fecha_soat; ?></td>
                                         <td><?php echo $dias_restantes_soat; ?></td>
+                                        <td><?php echo $moto['aseguradora']; ?></td>
                                     </tr>
                                 <?php } ?>
                             </tbody>

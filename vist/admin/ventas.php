@@ -14,6 +14,7 @@ $consultaFacturas = $conectar->prepare("
         fv.fecha_vigencia_tecnomecanica,
         fv.documento,
         fv.total,
+        ase.aseguradora,
         p.nom_producto,
         dv.cantidad AS cantidad_producto,
         p.precio AS subtotal_producto,
@@ -23,12 +24,14 @@ $consultaFacturas = $conectar->prepare("
         d.documentos,
         dvdocu.subtotal AS subtotal_documento
     FROM factura_venta fv
+   
     LEFT JOIN detalle_venta dv ON fv.id_venta = dv.id_venta
     LEFT JOIN productos p ON dv.id_producto = p.id_productos
     LEFT JOIN detalle_vservi dvs ON fv.id_venta = dvs.id_venta
     LEFT JOIN servicio s ON dvs.id_servicio = s.id_servicios
     LEFT JOIN detalle_vdocu dvdocu ON fv.id_venta = dvdocu.id_venta
     LEFT JOIN documentos d ON dvdocu.id_documentos = d.id_documentos
+    LEFT JOIN aseguradora ase ON fv.aseguradora = ase.id_aseguradora
 ");
 
 $consultaFacturas->execute();
@@ -56,11 +59,12 @@ $facturas = $consultaFacturas->fetchAll(PDO::FETCH_ASSOC);
             <table class="table table-striped table-bordered">
                 <thead class="table-dark">
                     <tr>
-                        <th>ID Venta</th>
+                      
                         <th>Placa del Vehículo</th>
                         <th>Fecha de Venta</th>
                         <th>Fecha de Vigencia SOAT</th>
                         <th>Fecha de Vigencia Tecnomecánica</th>
+                        <th>Aseguradora</th>
                         <th>Documento</th>
                         <th>Total</th>
                         <th>Productos</th>
@@ -72,11 +76,12 @@ $facturas = $consultaFacturas->fetchAll(PDO::FETCH_ASSOC);
                 <tbody>
                     <?php foreach ($facturas as $factura) { ?>
                         <tr>
-                            <td><?php echo $factura["id_venta"]; ?></td>
+                            
                             <td><?php echo $factura["placa"]; ?></td>
                             <td><?php echo $factura["fecha"]; ?></td>
                             <td><?php echo $factura["fecha_vigencia_soat"]; ?></td>
                             <td><?php echo $factura["fecha_vigencia_tecnomecanica"]; ?></td>
+                            <td><?php echo $factura["aseguradora"]; ?></td>
                             <td><?php echo $factura["documento"]; ?></td>
                             <td><?php echo $factura["total"]; ?></td>
                             <td>

@@ -154,7 +154,7 @@
                                 <table id="tablaFacturas" class="table table-striped table-bordered">
                                     <thead class="table-dark">
                                         <tr>
-                                            <th>ID Venta</th>
+                                         
                                             <th>Fecha de Venta</th>
                                             <th>Total</th>
                                             <th>Productos</th>
@@ -165,7 +165,7 @@
                                     <tbody>
                                         <?php foreach ($facturas as $factura) { ?>
                                             <tr>
-                                                <td><?php echo $factura["id_venta"]; ?></td>
+                                                
                                                 <td><?php echo $factura["fecha"]; ?></td>
                                                 <td><?php echo $factura["total"]; ?></td>
                                                 <td>
