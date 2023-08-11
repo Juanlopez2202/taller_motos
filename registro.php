@@ -37,12 +37,13 @@ if ((isset($_POST["agregar"]))&&($_POST["agregar"]=="formu"))
         $estado = $_POST['estado'];
         $tipo1 = $_POST['tip'];
         $pass = $_POST['password'];
+        $token = bin2hex(random_bytes(16));
 
         $clave_procesada=password_hash($pass,PASSWORD_BCRYPT,["cost"=>15]);
 
 		$campos = array();
 
-        $validar="SELECT * FROM usuarios WHERE documento='$id' AND usuario='$usuario' ";
+        $validar="SELECT * FROM usuarios WHERE documento='$id' AND usuario='$usuario' and email='$email' ";
         $queryi=$conectar->prepare($validar);
         $queryi->execute();
         $fila1=$queryi->fetchAll(PDO::FETCH_ASSOC);
@@ -63,10 +64,11 @@ if ((isset($_POST["agregar"]))&&($_POST["agregar"]=="formu"))
         
         else
         {
-            $insertsql=$conectar->prepare("INSERT INTO usuarios(documento,nombre_completo,telefono,email,fecha_usu,usuario,password,id_tip_usu,id_estado) VALUES (?,?,?, ?,?, ?,?,?,?);");
-            $insertsql->execute([$id,$nombre,$telefono,$email,$fecha,$usuario,$clave_procesada,$tipo1,$estado]);
+            $insertsql=$conectar->prepare("INSERT INTO usuarios(documento,nombre_completo,telefono,email,fecha_usu,usuario,password,token,id_tip_usu,id_estado) VALUES (?,?,?,?, ?,?, ?,?,?,?);");
+            $insertsql->execute([$id,$nombre,$telefono,$email,$fecha,$usuario,$clave_procesada,$token,$tipo1,$estado]);
+            
             echo '<script>alert ("Registro Exitoso, Gracias");</script>';
-            echo '<script> window.location="index.html"</script>';
+            echo '<script>window.location="controller/validaciones/veri.php?email=' . $email . '"</script>';
         }
 
     }
@@ -132,7 +134,7 @@ if ((isset($_POST["agregar"]))&&($_POST["agregar"]=="formu"))
             <div class="formulario__grupo" id="grupo__fecha">
 				<label for="fecha" class="formulario__label">Fecha de nacimiento</label>
 				<div class="formulario__grupo-input">
-					<input type="date"   class="formulario__input" name="fecha" id="correo">
+					<input type="date"   class="formulario__input" name="fecha" id="correo" min="1968-01-01" max="2005-12-31">
 					<i class="formulario__validacion-estado fas fa-times-circle"></i>
 				</div>
 			</div>

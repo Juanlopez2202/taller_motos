@@ -3,14 +3,13 @@ require_once "navbar.php";
 
 $db = new database();
 $conectar = $db->conectar();
-
+$vendedor=$_SESSION['documento'];
 $consul = $conectar->prepare("SELECT * FROM usuarios WHERE id_tip_usu = 1 ");
 $consul->execute();
 
 $consu = $conectar->prepare("SELECT * FROM moto ");
 $consu->execute();
-$consua = $conectar->prepare("SELECT * FROM aseguradora ");
-$consua->execute();
+
 
 
 // Obtener el valor de "status" si está presente en la URL
@@ -84,17 +83,12 @@ if (isset($_GET["status"])) {
     }
 }    
 
-if (!isset($_SESSION["carrito_productos"])) {
-    $_SESSION["carrito_productos"] = [];
-}
 
 if (!isset($_SESSION["carrito_servicios"])) {
     $_SESSION["carrito_servicios"] = [];
 }
 
-if (!isset($_SESSION["carrito_documentos"])) {
-    $_SESSION["carrito_documentos"] = [];
-}
+
 
 $granTotal = 0;
 ?>
@@ -110,7 +104,7 @@ $granTotal = 0;
     <!-- Bootstrap CSS -->
 
     <!-- Select2 CSS -->
-  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css">
     <!-- Custom CSS -->
     <style>
         body {
@@ -149,13 +143,10 @@ $granTotal = 0;
                 $consultaServicios = $conectar->prepare("SELECT id_servicios AS id, servicio AS nombre FROM servicio");
                 $consultaServicios->execute();
 
-                $consultaProductos = $conectar->prepare("SELECT  id_productos AS id, nom_producto AS nombre FROM productos");
-                $consultaProductos->execute();
+              
 
-                $consultaDocumentos = $conectar->prepare("SELECT  id_documentos AS id, documentos AS nombre FROM documentos");
-                $consultaDocumentos->execute();
-
-                $resultados = array_merge($consultaServicios->fetchAll(), $consultaProductos->fetchAll(), $consultaDocumentos->fetchAll());
+          
+                $resultados = array_merge($consultaServicios->fetchAll());
 
                 foreach ($resultados as $resultado) {
                     echo "<option value='" . $resultado["id"] . "'>" . $resultado["nombre"] . "</option>";
@@ -180,7 +171,7 @@ $granTotal = 0;
                 <tbody>
                     <?php
                     // Combinar los datos de los carritos en una sola variable
-                    $carrito = array_merge($_SESSION["carrito_productos"], $_SESSION["carrito_servicios"], $_SESSION["carrito_documentos"]);
+                    $carrito = array_merge( $_SESSION["carrito_servicios"]);
 
                     foreach ($carrito as $indice => $item) {
                         $granTotal += $item["subtotal"];
@@ -216,22 +207,9 @@ $granTotal = 0;
                     <option value="<?php echo ($moto['placa']) ?>"><?php echo ($moto["placa"]) ?> </option>
                 <?php } ?>
             </select>
-            <label class="label1">Aseguradora</label>
-            <select class="form-control select-box" id="aseguradora" name="aseguradora">
-                <option disabled selected value="">Elige</option>
-                <?php foreach ($consua as $aseguradora) { ?>
-                    <option value="<?php echo ($aseguradora['id_aseguradora']) ?>"><?php echo ($aseguradora["aseguradora"]) ?> </option>
-                <?php } ?>
-            </select>
-
-            <label class="label1">Vendedor</label>
-            <select class="form-control select-box" id="vendedor" name="vendedor">
-                <option disabled selected value="">Elige un vendedor</option>
-                <?php foreach ($consul as $vendedor) { ?>
-                    <option value="<?php echo ($vendedor['documento']) ?>"><?php echo ($vendedor['nombre_completo']) ?> </option>
-                <?php } ?>
-            </select>
-
+            
+           
+            <input name="vendedor" type="hidden" value="<?php echo $vendedor; ?>">
             <input name="gran_total" type="hidden" value="<?php echo $granTotal; ?>">
             <button type="submit" class="btn btn-success">Terminar venta</button>
             <a href="cancelarVenta.php" class="btn btn-danger">Cancelar venta</a>

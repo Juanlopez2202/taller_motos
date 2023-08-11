@@ -39,20 +39,37 @@ $combustible->execute();
 ?>
    <?php
     
-        $consulta=$conectar->prepare("SELECT * from moto where placa='".$_GET['actu']."' ");
-        $consulta->execute();
-        $query=$consulta->fetch(PDO::FETCH_ASSOC);
-           
+    $consulta = $conectar->prepare("
+    SELECT *
+    FROM moto
+    INNER JOIN marca ON moto.id_marca = marca.id_marca
+    INNER JOIN usuarios ON moto.documento = usuarios.documento
+    INNER JOIN linea ON moto.id_linea = linea.id_linea
+    INNER JOIN modelo ON moto.id_modelo = modelo.id_modelo
+    INNER JOIN cilindraje ON moto.id_cilindraje = cilindraje.id_cilindraje
+    INNER JOIN color ON moto.id_color = color.id_color
+    INNER JOIN tipo_vehiculo ON moto.id_clase = tipo_vehiculo.id_clase
+    INNER JOIN tipo_carroceria ON moto.id_carroceria = tipo_carroceria.id_carroceria
+    INNER JOIN combustible ON moto.id_combustible = combustible.id_combustible
+    INNER JOIN tipo_servicio ON moto.id_tip_servicio = tipo_servicio.id_tip_servicio
+    WHERE placa = :placa
+");
+
+$placa = $_GET['actu'];
+$consulta->bindParam(':placa', $placa, PDO::PARAM_STR);
+$consulta->execute();
+$query = $consulta->fetch(PDO::FETCH_ASSOC);
+
        
 
        if ((isset($_POST["actualizar"]))&&($_POST["actualizar"]=="form"))
        {
-
+        
         $id=$_POST['id'];
         $descripcion = $_POST['descripcion'];
         $cantidad= $_POST['cantidad'];
         $marca=$_POST['marca'];
-        $propietario=$_POST['propietario'];
+        $propietario = $_POST['documento'];
         $id_linea=$_POST['linea'];
         $id_modelo=$_POST['modelo'];
         $id_cilindraje=$_POST['cilindraje'];
@@ -71,7 +88,7 @@ $combustible->execute();
         if ($id==""  || $descripcion=="" || $cantidad=="" ||$marca==""||$propietario==""||$id_linea==""||$id_modelo==""||$id_cilindraje==""||$id_color==""||$id_tip_servicio==""||$id_clase==""||$id_carroceria==""||$capacidad==""||$id_combustible==""||$numero_motor==""||$vin==""||$numero_chasis=="")
         {
             echo '<script> alert (" EXISTEN DATOS VACIOS");</script>';
-            echo '<script> windows.location="index.php"</script>';
+         //   echo '<script> window.location=".php"</script>';
         }
         
         else
@@ -110,7 +127,7 @@ $combustible->execute();
 					<form id="frmArticulos"  name="formu" method="post" >
 						<label>Marca</label>
 						<select class="form-control input-sm" name="marca">
-							<option  disabled selected value="">Selecciona marca</option>
+							<option  selected value="<?php echo($query['id_marca'])?>">Selecciona marca</option>
 							<?php foreach($marca as $resulm){
                              ?>
 								<option value="<?php echo($resulm['id_marca'])?>"><?php echo($resulm['marca'])?> </option>
@@ -120,16 +137,16 @@ $combustible->execute();
                              ?>
 						</select>
                         <label >Propietario</label>
-                        <input type="text" disabled class="form-control input-sm" id="id" name="id" placeholder="<?php echo $query['documento'];?>">   
+                        <input type="text"  class="form-control input-sm" id="id" name="documento" placeholder="<?php echo $query['documento'];?>">   
                         <label>Placa</label>
-						<input type="text" disabled class="form-control input-sm" id="id" name="id" placeholder="<?php echo $query['placa'];?>">
+						<input type="text"  class="form-control input-sm" id="id" name="id" placeholder="<?php echo $query['placa'];?>">
 						<label>Descripcion</label>
 						<input type="text" class="form-control input-sm" id="descripcion" name="descripcion" placeholder="<?php echo $query['descripcion'];?>">
 						<label>kilometraje</label>
 						<input type="number" min="0" class="form-control input-sm" id="cantidad" name="cantidad" placeholder="<?php echo $query['km'];?>">
                         <label>Linea</label>
 						<select class="form-control input-sm" name="linea">
-							<option disabled selected value="">Selecciona linea</option>
+							<option  selected value="<?php echo($query['id_linea'])?>">Selecciona linea</option>
 							<?php foreach($linea as $resull){
                              ?>
 								<option value="<?php echo($resull['id_linea'])?>"><?php echo($resull['linea'])?> </option>
@@ -140,7 +157,7 @@ $combustible->execute();
 						</select>
                         <label>Modelo</label>
 						<select class="form-control input-sm" name="modelo">
-							<option disabled selected value="">Selecciona modelo</option>
+							<option  selected value="<?php echo($query['id_modelo'])?>">Selecciona modelo</option>
 							<?php foreach($modelo as $resulmo){
                              ?>
 								<option value="<?php echo($resulmo['id_modelo'])?>"><?php echo($resulmo['modelo'])?> </option>
@@ -151,7 +168,7 @@ $combustible->execute();
 						</select>
                         <label>Cilindraje</label>
 						<select class="form-control input-sm" name="cilindraje">
-							<option disabled selected value="">Selecciona cilindraje</option>
+							<option  selected value="<?php echo($query['id_cilindraje'])?>">Selecciona cilindraje</option>
 							<?php foreach($cilindraje as $resulci){
                              ?>
 								<option value="<?php echo($resulci['id_cilindraje'])?>"><?php echo($resulci['cilindraje'])?> </option>
@@ -162,7 +179,7 @@ $combustible->execute();
 						</select>
                         <label>Color</label>
 						<select class="form-control input-sm" name="color">
-							<option disabled selected value="">Selecciona color</option>
+							<option  selected value="<?php echo($query['id_color'])?>">Selecciona color</option>
 							<?php foreach($color as $resulcol){
                              ?>
 								<option value="<?php echo($resulcol['id_color'])?>"><?php echo($resulcol['color'])?> </option>
@@ -173,7 +190,7 @@ $combustible->execute();
 						</select>
                         <label>Tipo de servcio</label>
 						<select class="form-control input-sm" name="tipser">
-							<option disabled selected value="">Selecciona servicio</option>
+							<option  selected value="<?php echo($query['id_tip_servicio'])?>">Selecciona servicio</option>
 							<?php foreach($tip_ser as $resulser){
                              ?>
 								<option value="<?php echo($resulser['id_tip_servicio'])?>"><?php echo($resulser['tip_servicio'])?> </option>
@@ -184,7 +201,7 @@ $combustible->execute();
 						</select>
                         <label>Tipo de vehiculo</label>
 						<select class="form-control input-sm" name="tipveh">
-							<option disabled selected value="">Selecciona tipo de vehiculo</option>
+							<option  selected value="<?php echo($query['id_clase'])?>">Selecciona tipo de vehiculo</option>
 							<?php foreach($tip_veh as $resulveh){
                              ?>
 								<option value="<?php echo($resulveh['id_clase'])?>"><?php echo($resulveh['tip_vehiculo'])?> </option>
@@ -195,7 +212,7 @@ $combustible->execute();
 						</select>
                         <label>Carroceria</label>
 						<select class="form-control input-sm" name="carroceria">
-							<option disabled selected value="">Selecciona carroceria</option>
+							<option  selected value="<?php echo($query['id_carroceria'])?>">Selecciona carroceria</option>
 							<?php foreach($carroceria as $resulcar){
                              ?>
 								<option value="<?php echo($resulcar['id_carroceria'])?>"><?php echo($resulcar['carroceria'])?> </option>
@@ -208,7 +225,7 @@ $combustible->execute();
                         <input type="number"  class="form-control input-sm" id="capacidad" name="capacidad" placeholder="<?php echo $query['capacidad'];?>">
                         <label>Combustible</label>
 						<select class="form-control input-sm" name="combustible">
-							<option disabled selected value="">Selecciona combustible</option>
+							<option  selected value="<?php echo($query['id_combustible'])?>">Selecciona combustible</option>
 							<?php foreach($combustible as $resulcom){
                              ?>
 								<option value="<?php echo($resulcom['id_combustible'])?>"><?php echo($resulcom['combustible'])?> </option>
