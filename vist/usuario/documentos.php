@@ -33,7 +33,7 @@
         INNER JOIN color co ON m.id_color = co.id_color
         LEFT JOIN factura_venta fv ON m.placa = fv.placa
         LEFT JOIN aseguradora ase  ON fv.aseguradora = ase.id_aseguradora
-        WHERE m.documento = ?
+        WHERE fv.estado = 'vigente' and m.documento = ? 
         GROUP BY m.placa
     ");
     $consultaMotos->execute([$documento_id]);
@@ -122,17 +122,29 @@
                             <thead>
                                 <tr>
                                     <th>Fechas de Vencimiento del SOAT</th>
-                                    <th>Días Restantes</th>
+                                    <th>Vigencia</th>
                                     <th>Aseguradora</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($array_fechas_soat as $fecha_soat) {
                                     $dias_restantes_soat = (strtotime($fecha_soat) - strtotime(date("Y-m-d"))) / (60 * 60 * 24);
+                                    
                                     ?>
+                                    
                                     <tr>
                                         <td><?php echo $fecha_soat; ?></td>
-                                        <td><?php echo $dias_restantes_soat; ?></td>
+                                        <?php  if($dias_restantes_soat < 0){
+                                        ?>
+                                        <td>No vigente</td><?php 
+                                       
+                                    
+                                    ?>
+                            <?php   }else {
+                                ?>
+                                      <td><?php echo $dias_restantes_soat; ?></td><?php
+                            }
+                            ?>          
                                         <td><?php echo $moto['aseguradora']; ?></td>
                                     </tr>
                                 <?php } ?>
@@ -159,7 +171,7 @@
                             <thead>
                                 <tr>
                                     <th>Fechas de Vencimiento de la Tecnomecánica</th>
-                                    <th>Días Restantes</th>
+                                    <th>Vigencia</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -168,7 +180,17 @@
                                     ?>
                                     <tr>
                                         <td><?php echo $fecha_tecnomecanica; ?></td>
-                                        <td><?php echo $dias_restantes_tecnomecanica; ?></td>
+                                        <?php  if($dias_restantes_tecnomecanica < 0){
+                                        ?>
+                                        <td>No vigente</td><?php 
+                                       
+                                    
+                                    ?>
+                            <?php   }else {
+                                ?>
+                                      <td><?php echo $dias_restantes_tecnomecanica; ?></td><?php
+                            }
+                            ?>          
                                     </tr>
                                 <?php } ?>
                             </tbody>

@@ -5,7 +5,7 @@ require_once("../../bd/conexion.php");
 $db = new database();
 $conectar = $db->conectar();
 date_default_timezone_set('America/Bogota');
-if (!isset( $_POST["placa"])) {
+if (!isset($_POST["placa"])) {
     echo '<script>alert("NO HAS COLOCADO LA PLACA DEL VEHICULO");</script>';
     echo '<script>window.location="vender.php"</script>';
 }
@@ -27,12 +27,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $granTotal = $_POST['gran_total'];
     $total = $granTotal;
     $documentos = $_SESSION["carrito_documentos"];
-  
+
     $fechaVenta = date("Y-m-d"); // Fecha actual
     $fechaVigenciaSoat = null; // Inicializar la fecha de vigencia de SOAT como nula
-    $fechaVigenciaTecnomecanica = null; 
+    $fechaVigenciaTecnomecanica = null;
     $vendedor = $_POST['vendedor']; // Obtener el nombre del vendedor
-    
+
     // Validar si se vende el servicio con ID 25 (Cambio de Aceite)
     $ventaCambioAceite = false;
     foreach ($_SESSION["carrito_servicios"] as $servicio) {
@@ -97,19 +97,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
             $fechaVigenciaTecnomecanica = date("Y-m-d", strtotime("+1 year"));
-           
+
             $empresa = $_POST['aseguradora'];
         }
     }
 
-    $insertVenta = $conectar->prepare("INSERT INTO factura_venta (placa, fecha, fecha_vigencia_soat, fecha_vigencia_tecnomecanica,aseguradora,documento, total) VALUES (?, ?, ?, ?, ?,?, ?)");
+    $insertVenta = $conectar->prepare("INSERT INTO factura_venta (placa, fecha, fecha_vigencia_soat, fecha_vigencia_tecnomecanica, aseguradora, documento, total, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
     // Establecer las fechas de vigencia según el tipo de documento vendido
-    $insertVenta->execute([$placa, $fechaVenta, $fechaVigenciaSoat, $fechaVigenciaTecnomecanica,$empresa, $vendedor, $total]);
-    
+    $insertVenta->execute([$placa, $fechaVenta, $fechaVigenciaSoat, $fechaVigenciaTecnomecanica, $empresa, $vendedor, $total, 'vigente']); // Por defecto, se establece como "nueva"
+
     // Obtener el ID de la venta recién insertada
     $id_venta = $conectar->lastInsertId();
-    
+
+    // Si la fecha de vigencia SOAT o Tecnomecánica es menor a la fecha actual, actualizamos el estado a "vencida"
+   
     // Actualizar existencias de los productos vendidos
     if (isset($_SESSION["carrito_productos"])) {
         foreach ($_SESSION["carrito_productos"] as $producto) {
@@ -169,15 +171,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insertVentaDocumento = $conectar->prepare("INSERT INTO detalle_vdocu (id_venta, id_documentos,  subtotal) VALUES (?, ?, ?)");
             $insertVentaDocumento->execute([$id_venta, $id_documento, $subtotal]);
         }
+        $actualizarEstadoVencidas = $conectar->prepare("UPDATE factura_venta SET estado = 'vencida' WHERE placa = ? AND ((fecha_vigencia_soat < CURDATE() AND fecha_vigencia_soat IS NOT NULL) AND (fecha_vigencia_tecnomecanica < CURDATE() AND fecha_vigencia_tecnomecanica IS NOT NULL))");
+        $actualizarEstadoVencidas->execute([$placa]);
     }
     
+    // Limpia el carrito de compras
+        // ... Resto de tu código existente ...
+
     // Limpia el carrito de compras
     unset($_SESSION["carrito_productos"]);
     unset($_SESSION["carrito_servicios"]);
     unset($_SESSION["carrito_documentos"]);
 
-    header("Location: vender.php?status=10") ;
-
+    header("Location: vender.php?status=10");
 } else {
     echo "Error al procesar la venta.";
 }
+
+// ... Resto de tu código ...
+?>

@@ -13,12 +13,14 @@
   
 
     <?php
-    require_once("navbar.php");
-
+    require_once("navar.php");
+    require_once ("../../controller/styles/dependencias.php");
+    require_once("../../bd/conexion.php");
     $db = new database();
     $conectar = $db->conectar();
+    session_start();
     date_default_timezone_set('America/Bogota');
-
+   $documento= $_SESSION['documento'];
     $placa1 = isset($_GET['placa']) ? $_GET['placa'] : '';
     $sentencia = $conectar->prepare("
     SELECT
@@ -27,7 +29,9 @@
     fv.fecha_vigencia_tecnomecanica,
     fv.estado
     FROM factura_venta fv
-    WHERE fv.estado = 'vigente' AND (fv.fecha_vigencia_soat IS NOT NULL OR fv.fecha_vigencia_tecnomecanica IS NOT NULL);
+    INNER JOIN moto m
+    ON fv.placa = m.placa 
+    WHERE fv.estado = 'vigente' AND (fv.fecha_vigencia_soat IS NOT NULL OR fv.fecha_vigencia_tecnomecanica IS NOT NULL) and m.documento = '$documento' ;
     
     ");
 
@@ -56,7 +60,7 @@
                         <th>Fecha de vigencia tecnomecanica</th>
                         <th>Estado SOAT</th>
                         <th>Estado Tecnomecánica</th>
-                        <th>Enviar alerta</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -74,7 +78,7 @@
 
                         $colorSOAT = 'text-muted';
                         $mensajeSOAT = 'No aplica';
-                        $mostrarBotonSOAT = false;
+                       
 
                         if ($diasFaltantesSOAT !== null) {
                             if ($diasFaltantesSOAT < 0) {
@@ -84,11 +88,11 @@
                             } elseif ($diasFaltantesSOAT == 0) {
                                 $colorSOAT = 'text-warning';
                                 $mensajeSOAT = 'VENCE HOY';
-                                $mostrarBotonSOAT = true;
+                            
                             } elseif ($diasFaltantesSOAT <= 20) {
                                 $colorSOAT = 'text-warning';
                                 $mensajeSOAT = 'Vence en menos de 20 días';
-                                $mostrarBotonSOAT = true;
+                                
                             } else {
                                 $colorSOAT = 'text-success';
                                 $mensajeSOAT = 'Vigente';
@@ -97,21 +101,21 @@
 
                         $colorTecno = 'text-muted';
                         $mensajeTecno = 'No aplica';
-                        $mostrarBotonTecno = false;
+                        
 
                         if ($diasFaltantesTecno !== null) {
                             if ($diasFaltantesTecno < 0) {
                                 $colorTecno = 'text-danger';
                                 $mensajeTecno = 'Vencido';
-                                $mostrarBotonTecno = true;
+                                
                             } elseif ($diasFaltantesTecno == 0) {
                                 $colorTecno = 'text-warning';
                                 $mensajeTecno = 'VENCE HOY';
-                                $mostrarBotonTecno = true;
+                            
                             } elseif ($diasFaltantesTecno <= 20) {
                                 $colorTecno = 'text-warning';
                                 $mensajeTecno = 'Vence en menos de 20 días';
-                                $mostrarBotonTecno = true;
+                                
                             } else {
                                 $colorTecno = 'text-success';
                                 $mensajeTecno = 'Vigente';
@@ -124,16 +128,7 @@
                             <td><?php echo $venta['fecha_vigencia_tecnomecanica']; ?></td>
                             <td class="<?php echo $colorSOAT; ?>"><?php echo $mensajeSOAT; ?></td>
                             <td class="<?php echo $colorTecno; ?>"><?php echo $mensajeTecno; ?></td>
-                            <td>
-                                <?php if ($mostrarBotonSOAT) { ?>
-                                    <a href="enviar_correo.php?placa=<?php echo $placa; ?>&dias=<?php echo $diasFaltantesSOAT; ?>&tipo=soat"
-                                        class="btn btn-primary">Enviar Alerta SOAT</a>
-                                <?php } ?>
-                                <?php if ($mostrarBotonTecno) { ?>
-                                    <a href="enviar_correo.php?placa=<?php echo $placa; ?>&dias=<?php echo $diasFaltantesTecno; ?>&tipo=tecnomecanica"
-                                        class="btn btn-primary">Enviar Alerta Tecnomecánica</a>
-                                <?php } ?>
-                            </td>
+                          
                         </tr>
                     <?php } ?>
                 </tbody>

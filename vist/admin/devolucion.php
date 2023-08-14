@@ -92,7 +92,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["id_venta"])) {
 
 <?php
     } else {
-        echo "Factura no encontrada.";
+         echo '<script>alert ("Factura no encontrada");</script>';
+            
     }
 }
 ?>

@@ -46,7 +46,8 @@ if ($cantidad_vendida > 0) {
     $actualizarExistenciaProducto = $conectar->prepare("UPDATE productos SET cantidad_ini = ? WHERE id_productos = ?");
     $actualizarExistenciaProducto->execute([$nueva_existencia, $id_producto_devuelto]);
 
-    echo "Devolución procesada correctamente.";
+    echo '<script>alert ("Devolucion aplicada corectamente");</script>';
+            echo '<script> window.location="ventas.php"</script>';
 } else {
     echo "No se puede realizar la devolución. La cantidad vendida es cero.";
 }
